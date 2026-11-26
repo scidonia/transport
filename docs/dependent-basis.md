@@ -87,6 +87,18 @@ typing rule, not only by missing lemmas.
    yet used by the transport theorem.  `unit_caseDep` is a concrete
    derivation: a one-constructor family with a type parameter, a branch
    telescope `[A : sort 1]`, and the constant motive `sort 1`.
+
+   A dependent motive exposes a second core issue: `HasType.roll` computes the
+   result indices with `substParams params`, which substitutes only the data
+   parameters.  A constructor index that depends on a constructor argument
+   (for example `cons n a v : Vec A (suc n)`) is therefore left uninstantiated.
+   `HasTypeDep.rollDep` uses `substMany args` for the result indices, and
+   `branchTy` now substitutes the branch arguments into the constructor
+   indices.  `unit_caseDep_motive` exercises the result: `P : Unit -> Type`,
+   `p (A) : P (Unit.c A)`, motive `P scrut`, branch `p A`.  It is stated
+   conditionally on the environment gate, the scrutinee, and the motive
+   typing, so it isolates the dependent motive and branch construction from
+   the positivity computation.
 2. `caseMotiveCtx` uses `ctxExtendMany`, which shifts each type as it adds
    the next index.  The weakening renaming for a multi-index motive is
    therefore not a single `upRenN`; it depends on the position in the
@@ -118,13 +130,17 @@ Transport.Mltt.Scoped.wellFormedEnv_Eq
 Transport.Mltt.Scoped.substMany_rename_of_wellScoped
 Transport.Mltt.Dependent.unitVal_hasType
 Transport.Mltt.Dependent.unit_caseDep
+Transport.Mltt.Dependent.Motive.pval_hasType
+Transport.Mltt.Dependent.Motive.unit_caseDep_motive
 ```
 
 They say that a term scoped by `d` is fixed by the identity renaming below
 `d`, that the `Eq` signature and its environment satisfy the telescope
-invariant, and that renaming commutes with `substMany` for scoped terms.
-They do not say that weakening holds for an arbitrary well-formed
-environment, that conversion is stable, or that a supercompiler exists.
+invariant, that renaming commutes with `substMany` for scoped terms, and
+that the dependent case types a constant and a dependent motive through the
+constructor telescope.  They do not say that weakening holds for an arbitrary
+well-formed environment, that conversion is stable, or that a supercompiler
+exists.
 The dependent case relation `HasTypeDep.caseDep` is a rule, not a weakening
 theorem: its metatheory is still open.  Those statements are stages B4--B11
 above, and each needs its own proof.

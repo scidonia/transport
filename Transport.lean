@@ -15,3 +15,4 @@ import Transport.Cost
 import Transport.QueueCost
 import Transport.Mltt.Scoped
 import Transport.Mltt.Dependent
+import Transport.Mltt.DependentMotive

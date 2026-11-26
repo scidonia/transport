@@ -42,15 +42,36 @@ def branchCtx (Γ : Ctx) (I : Nat) (ctor : CtorSig) (params : List Tm) : Ctx :=
 and at the `roll` term built from the data parameters and the branch
 variables. -/
 def branchTy (I c : Nat) (ctor : CtorSig) (params : List Tm) (C : Tm) : Tm :=
+  let branchLen := ctor.paramTys.length + ctor.recArgs.length
+  let branchArgs := params ++ branchVars branchLen
   substMany
-    ([.roll I c
-        (params ++ branchVars (ctor.paramTys.length + ctor.recArgs.length))]
-      ++ (ctor.indices.map (substParams params)).reverse)
+    ([.roll I c branchArgs]
+      ++ (ctor.indices.map (substMany branchArgs)).reverse)
     C
 
 /-- Typing with dependent elimination. -/
 inductive HasTypeDep (env : Env) : Ctx → Tm → Tm → Prop
   | ofHasType {Γ : Ctx} {t A : Tm} : HasType env Γ t A → HasTypeDep env Γ t A
+  | rollDep (Γ : Ctx) (I : Nat) (sig : IndSig) (c : Nat) (ctor : CtorSig)
+      (args : List Tm) :
+      lookupIndStrict env I = some sig →
+      lookupCtor sig c = some ctor →
+      args.length = sig.params.length + ctor.paramTys.length + ctor.recArgs.length →
+      (∀ (i : Nat) (a A : Tm),
+        (args.take sig.params.length)[i]? = some a →
+        (sig.params.map (substMany args))[i]? = some A →
+        HasTypeDep env Γ a A) →
+      (∀ (i : Nat) (a A : Tm),
+        ((args.drop sig.params.length).take ctor.paramTys.length)[i]? = some a →
+        (ctor.paramTys.map (substMany args))[i]? = some A →
+        HasTypeDep env Γ a A) →
+      (∀ (i : Nat) (r : Tm) (idxs : List Tm),
+        ((args.drop sig.params.length).drop ctor.paramTys.length)[i]? = some r →
+        ctor.recArgs[i]? = some idxs →
+        HasTypeDep env Γ r
+          (.ind I (args.take sig.params.length ++ idxs.map (substMany args)))) →
+      HasTypeDep env Γ (.roll I c args)
+        (.ind I (args.take sig.params.length ++ ctor.indices.map (substMany args)))
   | caseDep (Γ : Ctx) (I n : Nat) (sig : IndSig) (scrut C : Tm) (brs : List Tm)
       (i : Nat) (args : List Tm) :
       lookupIndStrict env I = some sig →
