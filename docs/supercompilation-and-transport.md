@@ -40,6 +40,19 @@ A branch of an open case split has its conclusion in a refined context. A genera
 
 ## 3. The direct connection to HoTT
 
+### Two equalities
+
+The Lean presentation uses Lean's `Eq` for the object theory and the
+metatheory.  That equality is proof-irrelevant, and univalence over it is
+inconsistent: the round-trip law forces the identity self-equivalence of `Bool`
+to equal negation (`Transport/UnivalenceObstruction.lean`).
+
+The HoTT layer therefore uses Cubical Agda's proof-relevant path equality
+`_≡_`, where `ua`, `uaβ`, and `uaIdEquiv` compute
+(`cubical/Univalence.agda`).  A `TransportData` over `Eq` is the definitional or
+propositional regime; the univalent regime lives over the Cubical path type.
+The two equalities are not interchangeable.
+
 ### An index transformation moves existing values
 
 Take $i:\mathrm{Fin}(\mathrm{length}(xs\mathbin{++}ys))$. A transformation of the index computation may yield a certificate
@@ -150,6 +163,6 @@ The pair-of-lists abstraction is many-to-one. Use a relation between representat
 | 4. HoTT interpretation | Vector packing, unpacking, and the three-vector coherence proof | Transport computes the chosen migration in each direction, and the two packing routes agree on dependent clients. |
 | 5. Separation | Reversal cost derivation, queue lower bound, and a common-ancestor result for a named calculus | Distinguish forward attainability, zigzag connectivity and representation hypotheses in each theorem statement. A minimal counterexample to span compression is a result. |
 
-Stages 1–3 can use Lean as the metatheory of an explicit object calculus. For stage 4, a small Cubical Agda model is a practical way to test the universe paths and their computation laws. Specify the interpretation from the Lean presentation to that model; if the link is initially mathematical, label the two checked developments accordingly. Proof-relevant derivation data in Lean do not by themselves confer univalence on the object theory. For stage 5, local coherence results for rewriting suggest how to build equations between histories once the relevant well-foundedness and confluence hypotheses are established. [Kraus and von Raumer, *A Rewriting Coherence Theorem with Applications in Homotopy Type Theory*](https://arxiv.org/abs/2107.01594)
+Stages 1–3 can use Lean as the metatheory of an explicit object calculus. For stage 4, a small Cubical Agda model is a practical way to test the universe paths and their computation laws.  Its path equality is separate from Lean's `Eq`: the latter is proof-irrelevant and cannot host univalence (the obstruction above), while the Cubical path type carries `ua`, `uaβ`, and the 2-path coherence data. Specify the interpretation from the Lean presentation to that model; if the link is initially mathematical, label the two checked developments accordingly. Proof-relevant derivation data in Lean do not by themselves confer univalence on the object theory. For stage 5, local coherence results for rewriting suggest how to build equations between histories once the relevant well-foundedness and confluence hypotheses are established. [Kraus and von Raumer, *A Rewriting Coherence Theorem with Applications in Homotopy Type Theory*](https://arxiv.org/abs/2107.01594)
 
 Certifying supercompilation for Martin-Löf type theory already has a substantial precedent in TT Lite SC, which produces residual programs and independently checkable equivalence proofs. A first paper from this programme should exhibit one checked derivation that changes a dependent type, prove what its transport computes, and compare two derivations by a coherence theorem. A subsequent classification result should identify a rule or invariant that strictly changes the reachable residuals or costs. Those results would connect the computational operations of the supercompiler to the geometry of its certificates. [Klyuchnikov and Romanenko, *Certifying Supercompilation for Martin-Löf's Type Theory*](https://pat.keldysh.ru/~klyuchnikov/ttlite-psi2014.pdf)
