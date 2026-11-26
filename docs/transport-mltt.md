@@ -4,10 +4,11 @@ This note records what a type-preservation theorem for a supercompiler on MLTT
 has to mean.  The short version: it is a **transport theorem**, not a syntactic
 same-type preservation lemma.
 
-The current MLTT targets (`hard/mltt-j`, `hard/mltt-weaken`) prove source
-typing facts.  They do not define reduction, definitional equality, or a
-supercompiler, so the transport theorem below is a specification, not a result
-already proved in this repository.
+The current MLTT development (`Transport/Mltt/J.lean`,
+`Transport/Mltt/Weaken.lean`) proves source typing facts.  It does not define
+reduction or definitional equality on the full indexed syntax, and it does not
+define a supercompiler, so the transport theorem below is a specification for
+the full calculus, not a result already proved for it.
 
 ## 1. Why the naive statement fails
 
@@ -254,7 +255,7 @@ This is stronger than a collection of ad hoc preservation lemmas.  In
 particular, it rules out a supercompiler that is correct on closed terms but
 cannot be substituted into an arbitrary context.
 
-## 8. Consequences for the MLTT targets
+## 8. Consequences for the current MLTT development
 
 The current MLTT files have:
 
@@ -270,8 +271,9 @@ but no:
 - general substitution;
 - general weakening.
 
-So the transport theorem is not yet statable for this formalisation.  The
-prerequisites are:
+So the transport theorem is not yet provable for the full formalisation.
+(A schema for it is stated in `Transport/Spec.lean`, and the function fragment
+has renaming, substitution, and beta preservation.)  The prerequisites are:
 
 1. reduction and conversion;
 2. general weakening;
@@ -282,8 +284,8 @@ prerequisites are:
 7. a logical relation or contextual equivalence;
 8. the supercompiler translation and its transport/equivalence proof.
 
-The `J_has_type` and `Eq` weakening targets are useful proof-search benchmarks,
-but they are below the transport theorem.  A full supercompilation theorem for
+The `J_has_type` and `Eq` weakening proofs are prerequisites, but they are
+below the transport theorem.  A full supercompilation theorem for
 MLTT requires a theory of transport that is stable under substitution, not a
 single type-preservation lemma.
 

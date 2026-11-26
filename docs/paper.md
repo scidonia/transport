@@ -107,7 +107,7 @@ rules for `ind`, `roll`, and `case` compute their result types with `substMany`
 and `substParams`.
 
 The formalisation is deliberately small: Lean core and Std only, no mathlib,
-and no reference proof in the repository.
+and no stored reference proof of the transport theorem.
 
 ### 3.2 The fragment
 

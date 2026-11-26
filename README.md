@@ -21,7 +21,7 @@ The toolchain comes from the flake; nothing needs to be activated.
 nix develop -c lake build
 ```
 
-No Lean dependencies.  The corpus uses Lean core and Std only.
+No Lean dependencies.  The development uses Lean core and Std only.
 
 ## What is proved
 

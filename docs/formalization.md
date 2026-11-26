@@ -93,9 +93,11 @@ structure Translation where
 structure TransportData where
   ctxRel : CtxRel
   tyRel : TyRel
-  transport : ctxRel Γ Γ' → tyRel A A' → Tm → Tm
-  sound : ctxRel Γ Γ' → tyRel A A' → HasType env Γ' t A' →
-    HasType env Γ (transport hΓ hA t) A
+  transport : ∀ {Γ Γ' : Ctx} {A A' : Tm},
+    ctxRel Γ Γ' → tyRel A A' → Tm → Tm
+  sound : ∀ {env : Env} {Γ Γ' : Ctx} {A A' : Tm} {t : Tm}
+    (hΓ : ctxRel Γ Γ') (hA : tyRel A A'),
+    HasType env Γ' t A' → HasType env Γ (transport hΓ hA t) A
 
 structure Supercompiler where
   translation : Translation
@@ -108,11 +110,15 @@ structure Supercompiler where
 ```lean
 theorem transport_theorem
     (sc : Supercompiler) (td : TransportData)
-    (hctx : ∀ Γ, td.ctxRel Γ (sc.scCtx Γ))
-    (hty : ∀ A, td.tyRel A (sc.scTy A))
-    (htm : HasType env Γ t A →
-      HasType env (sc.scCtx Γ) (sc.scTm t) (sc.scTy A)) :
-    HasType env Γ (td.transport (hctx Γ) (hty A) (sc.scTm t)) A
+    (hctx : ∀ Γ, td.ctxRel Γ (sc.translation.scCtx Γ))
+    (hty : ∀ A, td.tyRel A (sc.translation.scTy A))
+    (htm : ∀ {env : Env} {Γ : Ctx} {t A : Tm},
+      HasType env Γ t A →
+      HasType env (sc.translation.scCtx Γ)
+        (sc.translation.scTm t) (sc.translation.scTy A)) :
+    ∀ {env : Env} {Γ : Ctx} {t A : Tm}, HasType env Γ t A →
+      HasType env Γ
+        (td.transport (hctx Γ) (hty A) (sc.translation.scTm t)) A
 ```
 
 `transport_theorem_fragment` is the same statement with the additional
@@ -120,13 +126,13 @@ theorem transport_theorem
 
 `TransportData.identity` is the syntactic-equality regime: `ctxRel = Eq`,
 `tyRel = Eq`, `transport = fun _ _ t => t`, and `sound` is `Eq.rec`.
-`Transport.BetaInstance.transport` instantiates the theorem at beta contraction.
+`Transport.BetaInstance.transport` instantiates the fragment theorem at beta contraction.
 
 Beta is deliberately a **term-level** translation, not a compositional one.
 Substituting a lambda for a variable can expose a redex that `beta` did not
 see, so `beta (t[sigma])` and `(beta t)[sigma]` are not equal in general.
-`Transport.BetaInstance.transport` is therefore an instance of the basic theorem, not
-of the substitution-natural theorem of §4.1 of the problem statement.  The
+`Transport.BetaInstance.transport` is therefore an instance of the basic fragment theorem,
+not of the substitution-natural theorem of §4.1 of the problem statement.  The
 distinction is the point: a supercompiler can be type-preserving on a closed
 derivation and still fail to compose under substitution.
 
