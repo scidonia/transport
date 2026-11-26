@@ -76,12 +76,15 @@ the object-theory metatheory.  B11 is the supercompiler itself.
 A direct general weakening proof is blocked by the shape of the current
 typing rule, not only by missing lemmas.
 
-1. `HasType.case` requires `ctor.paramTys = []` and `ctor.recArgs = []`.
-   The branch is therefore checked in the original context `Γ`, and the
-   branch type is just the motive at the constructor's nullary result.  A
-   constructor with arguments (`Vec.cons`, `Fin.succ`, a recursive field)
-   has no branch context and no branch type.  The dependent case rule is
-   missing, so `Vec` and `Fin` cannot be eliminated.
+1. The original `HasType.case` requires `ctor.paramTys = []` and
+   `ctor.recArgs = []`.  The branch is therefore checked in the original
+   context `Γ`, and the branch type is just the motive at the constructor's
+   nullary result.  `Transport/Mltt/Dependent.lean` now supplies the general
+   rule as a separate relation `HasTypeDep.caseDep`: the branch context is
+   the constructor telescope `Δ_i`, and the branch result is the motive at
+   the constructor's result indices and the `roll` term.  The old `HasType`
+   is unchanged, so its existing proofs still hold; the new relation is not
+   yet used by the transport theorem.
 2. `caseMotiveCtx` uses `ctxExtendMany`, which shifts each type as it adds
    the next index.  The weakening renaming for a multi-index motive is
    therefore not a single `upRenN`; it depends on the position in the
@@ -92,18 +95,18 @@ typing rule, not only by missing lemmas.
 
 The next stage is therefore:
 
-1. add a dependent `case` rule with a branch context for the constructor's
-   parameters and recursive fields, and a branch type at the constructor's
-   result indices;
-2. define a well-scoped telescope context and prove its weakening;
-3. then return to B4 for the full `HasType`.
+1. ~~add a dependent `case` rule~~ — done in `Transport/Mltt/Dependent.lean`
+   as `HasTypeDep.caseDep`, separate from the old `HasType`;
+2. define a well-scoped telescope context and prove weakening and
+   substitution for `HasTypeDep`;
+3. then relate `HasTypeDep` to the old judgment and return to B4.
 
 The checked B1--B3 layer remains useful: it supplies the scope predicate
 and the `substMany` commutation the new case rule needs.
 
 ## 5. Scope of the checked layer
 
-The checked results are B1--B3:
+The checked theorems are B1--B3:
 
 ```text
 Transport.Mltt.Scoped.rename_upRenN_of_wellScoped
@@ -117,7 +120,9 @@ They say that a term scoped by `d` is fixed by the identity renaming below
 invariant, and that renaming commutes with `substMany` for scoped terms.
 They do not say that weakening holds for an arbitrary well-formed
 environment, that conversion is stable, or that a supercompiler exists.
-Those statements are stages B4--B11 above, and each needs its own proof.
+The dependent case relation `HasTypeDep.caseDep` is a rule, not a weakening
+theorem: its metatheory is still open.  Those statements are stages B4--B11
+above, and each needs its own proof.
 
 ## 6. Why this order
 
@@ -142,5 +147,6 @@ dependent instances await B4--B7.  The Cubical Agda development supplies the
 univalent/type-level packing used by the HoTT interpretation; it is not a
 replacement for the object-theory metatheory.
 
-The next concrete milestone is the dependent `case` rule and the telescope
-context; B4 follows once those are in place.
+The dependent case rule is now present.  The next concrete milestone is
+weakening and substitution for `HasTypeDep`, using the telescope branch
+context; B4 follows once that relation is related back to the old judgment.

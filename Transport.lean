@@ -14,3 +14,4 @@ import Transport.CommonAncestor
 import Transport.Cost
 import Transport.QueueCost
 import Transport.Mltt.Scoped
+import Transport.Mltt.Dependent

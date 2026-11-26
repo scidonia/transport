@@ -37,6 +37,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | result | Lean name |
 | --- | --- |
 | `Eq` `J` eliminator typechecks | `Transport.Mltt.J_has_type_proof` |
+| dependent case for constructor telescopes (separate relation) | `Transport.Mltt.Dependent.HasTypeDep.caseDep` |
 | well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
 | weakening for the `Eq` family | `Transport.Mltt.Weaken.hasType_weaken_proof` |
@@ -151,6 +152,7 @@ Transport/Mltt/Scoped.lean     well-scoped terms and the proposed signature inva
 Transport/Mltt/Subst.lean      substitution algebra and the fragment predicate
 Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
+Transport/Mltt/Dependent.lean  dependent case with constructor branch telescopes
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness
