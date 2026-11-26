@@ -7,7 +7,8 @@ HoTT library, for the univalent layer.  Ground Zero is vendored at commit
 
 - Toolchain: Lean 4.27.0 (`lean-toolchain` here and in the vendored package).
 - `Hott/Univalence.lean` uses `ua (ideqv A)` and `uaβ` over Ground Zero's
-  proof-relevant `Id`/`Path` type.
+  proof-relevant `Id`/`Path` type.  `notTransport` is the nontrivial
+  computation: transport along `ua notEquiv` sends `true` to `false`.
 - The `[GroundZero]` marker instance is supplied explicitly; Ground Zero's
   `uaweak` remains an axiom, as in the upstream library.
 

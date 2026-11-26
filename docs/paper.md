@@ -302,7 +302,7 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` | proved |
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
-| Lean `ua`/`uaβ` via Ground Zero 4.27 | `hott/Hott/Univalence.lean` | checked |
+| Lean `ua`/`uaβ` via Ground Zero 4.27 | `hott/Hott/Univalence.lean` (`notTransport`) | checked |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 
 Trust: the main 4.35 core has no `sorry`, no `admit`, no `native_decide`, and

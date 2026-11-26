@@ -93,7 +93,8 @@ There are two reused univalent layers.
 - **Lean:** `hott/` vendors Ground Zero at `2cbca29` (Apache-2.0) under
   `vendor/ground_zero`, built on Lean 4.27.0.  `hott/Hott/Univalence.lean`
   uses Ground Zero's `ua (ideqv A)` and `uaβ` over its proof-relevant
-  `Id`/`Path` type.  The 4.27 pin is forced: Lean 4.35's
+  `Id`/`Path` type; `notTransport` transports `true` along `ua notEquiv` and
+  gets `false`.  The 4.27 pin is forced: Lean 4.35's
   `Transitive`/`Reflexive` classes are `Prop`-valued while Ground Zero's `Id`
   is `Type`-valued.
 - **Cubical Agda:** `cubical/Univalence.agda` reuses `ua`, `uaβ`, and

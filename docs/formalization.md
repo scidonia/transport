@@ -172,7 +172,9 @@ The Lean route is `hott/`.  It vendors Ground Zero at
 `vendor/ground_zero`, and pins Lean 4.27.0 for both the vendored library and
 the `hott` package.  `Hott.Univalence` uses `ua (ideqv A)` and `uaβ` over
 Ground Zero's proof-relevant `Id`/`Path`; the `[GroundZero]` marker instance is
-supplied explicitly.  Ground Zero's `uaweak` remains an axiom, as upstream.
+supplied explicitly.  `notTransport` is the nontrivial computation:
+`transportconst (ua notEquiv) true = false` for Boolean negation.  Ground
+Zero's `uaweak` remains an axiom, as upstream.
 
 The 4.27 pin is not arbitrary: Lean 4.35's `Transitive`/`Reflexive` classes are
 `Prop`-valued, while Ground Zero's `Id` is `Type`-valued.  We tested the meta

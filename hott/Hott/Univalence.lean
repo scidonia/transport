@@ -8,11 +8,12 @@ This is the "different equality" route: it is not Lean's proof-irrelevant
 `Eq`, and the obstruction in `Transport/UnivalenceObstruction.lean` does not
 apply.
 
-The example is the identity equivalence; a nontrivial migration is a further
-use of the same `ua`.
+The identity equivalence gives the identity path; Boolean negation gives a
+nontrivial migration (`notTransport`).
 -/
 
 open GroundZero
+open GroundZero.Types.Id
 open GroundZero.Types.Equiv
 
 /-- The marker instance that the `hott` command normally supplies as a local
@@ -30,5 +31,20 @@ example {A : Type} : A = A := ua (ideqv A)
 example {A : Type} (a : A) :
     transportconst (ua (ideqv A)) a = a :=
   uaβ (ideqv A) a
+
+/-- Boolean negation is an involution. -/
+def notNot : (b : Bool) → Bool.not (Bool.not b) = b
+  | true => idp true
+  | false => idp false
+
+/-- Negation as an equivalence of `Bool`. -/
+def notEquiv : Bool ≃ Bool :=
+  ⟨Bool.not, (⟨Bool.not, notNot⟩, ⟨Bool.not, notNot⟩)⟩
+
+/-- A nontrivial univalence computation: transporting `true` along the
+univalence path of negation gives `false`. -/
+hott theorem notTransport :
+    transportconst (ua notEquiv) true = false :=
+  uaβ notEquiv true
 
 end
