@@ -76,6 +76,10 @@ The faithful model is `cubical/Univalence.agda`, which reuses the existing
 Cubical Agda library: `ua`, its computation rule `uaβ`, and `uaIdEquiv`, with a
 concrete transport through the univalence path of Boolean negation.
 
+The two equalities are deliberately separate.  Lean's `Eq` is the equality of
+the object theory and the metatheory; the univalent layer uses Cubical Agda's
+path type `_≡_`.  The obstruction applies only to the former.
+
 `rzrn/ground_zero` is an existing Lean 4 HoTT library with `ua`/`uaβ`, but it
 pins Lean 4.28; its `Id` is `Type`-valued, while Lean 4.35's relation classes
 are `Prop`-valued, so it needs a library migration rather than a version bump.

@@ -267,7 +267,9 @@ axiom there: `Transport/UnivalenceObstruction.lean` proves that the round-trip
 law forces the identity self-equivalence of `Bool` to equal negation.  The
 paper's HoTT experiment therefore reuses the existing Cubical Agda library
 (`cubical/Univalence.agda`), where `ua`, `uaβ`, and `uaIdEquiv` are available
-and compute.
+and compute.  The two equalities are kept separate: Lean's `Eq` carries the
+object theory and the transport theorem; Cubical Agda's `_≡_` carries the
+univalent layer.
 
 The displayed-functor picture makes the same point structurally: the displayed
 category over `Ctx` can be discrete, a groupoid, or univalent.  The

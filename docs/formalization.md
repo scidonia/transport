@@ -142,6 +142,11 @@ The Cubical Agda file `cubical/Univalence.agda` reuses the existing library:
 - `not-transport = uaβ notEquiv true`: a concrete Boolean migration;
 - `ua-id = uaIdEquiv`: the identity equivalence gives the identity path.
 
+The development therefore keeps two equalities: Lean's `Eq` for `HasType` and
+the transport theorem, and Cubical Agda's `_≡_` path type for the univalent
+layer.  The obstruction is a statement about the first, not a claim that no
+proof-relevant equality exists.
+
 Build: `nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'`.
 
 Existing Lean 4 alternatives were assessed.  `rzrn/ground_zero` has `ua` and
