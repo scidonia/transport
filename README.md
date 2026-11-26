@@ -41,6 +41,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | dependent case with a constructor parameter | `Transport.Mltt.Dependent.unit_caseDep` |
 | result-index substitution in dependent constructors | `Transport.Mltt.Dependent.HasTypeDep.rollDep` |
 | dependent case with a dependent motive | `Transport.Mltt.Dependent.Motive.unit_caseDep_motive` |
+| full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
+| `Eq`/`Nat` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed` |
 | well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
 | weakening for the `Eq` family | `Transport.Mltt.Weaken.hasType_weaken_proof` |
@@ -157,6 +159,7 @@ Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Mltt/Dependent.lean  dependent case with constructor branch telescopes
 Transport/Mltt/DependentMotive.lean  dependent motive P scrut and branch p A
+Transport/Mltt/Conventions.lean  full-argument signatures and their telescope invariant
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness

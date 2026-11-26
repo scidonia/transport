@@ -171,3 +171,22 @@ replacement for the object-theory metatheory.
 The dependent case rule is now present.  The next concrete milestone is
 weakening and substitution for `HasTypeDep`, using the telescope branch
 context; B4 follows once that relation is related back to the old judgment.
+
+### Uniform signature convention
+
+`Transport/Mltt/Conventions.lean` starts the signature layer for
+`HasTypeDep`:
+
+* `WellFormedSigFull` scopes constructor result indices by the **full**
+  argument list, unlike the original `WellFormedSig`;
+* `NatDep_sig`, `VecDep_sig`, `FinDep_sig`, and `EqDep_sig` are the first
+  signatures in that convention;
+* `natDep_wellFormed` and `eqDep_wellFormed` are checked; the `Vec` and `Fin`
+  well-formedness proofs are the next step;
+* the original `Eq_sig` remains for the old `HasType` proofs.
+
+The convention is: data parameters and indices are telescopes in binding
+order; constructor argument types, recursive index arguments, and constructor
+result indices are all scoped by the full argument list; `rollDep` and
+`branchTy` substitute that full list.  The old `substParams` convention is not
+mixed into this relation.
