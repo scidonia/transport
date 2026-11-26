@@ -11,8 +11,9 @@
 > are not part of the active build (`docs/lean-hott-survey.md`); the packing
 > and three-vector coherence are `cubical/Packing.agda`; the common-ancestor
 > compression is `Transport/CommonAncestor.lean`; the reversal cost model is
-> `Transport/Cost.lean`.  The commit reference in §1 records the starting
-> point, not the current state.
+> `Transport/Cost.lean`; the queue comparison is `Transport/QueueCost.lean`.
+> The commit reference in §1 records the starting point, not the current
+> state.
 
 # Supercompilation at terms and types
 

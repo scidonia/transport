@@ -52,6 +52,9 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | quadratic naïve-reverse cost | `Transport.Cost.two_mul_reverseCost` |
 | linear accumulator cost | `Transport.Cost.revAccCost_eq_length` |
 | accumulator cheaper | `Transport.Cost.revAccCost_le_reverseCost` |
+| strict queue quadratic cost | `Transport.QueueCost.two_mul_strictEnqueueTotal` |
+| two-list queue linear cost | `Transport.QueueCost.two_list_linear` |
+| two-list queue beats strict | `Transport.QueueCost.two_list_beats_strict` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
 The stage-3 index migration is in `Transport/IndexMigration.lean`: an index of
@@ -143,6 +146,7 @@ Transport/Derivation.lean      drive/fold/residualise derivation and soundness
 Transport/IndexMigration.lean  finite-index migration along length equations
 Transport/CommonAncestor.lean  zigzag compression and the successor instance
 Transport/Cost.lean            reversal cons-cell costs
+Transport/QueueCost.lean       strict-list vs two-list queue costs
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test

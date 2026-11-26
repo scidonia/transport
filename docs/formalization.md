@@ -241,6 +241,22 @@ only.
 - `revAccCost_le_reverseCost` proves it is never more expensive than the
   naïve source.
 
+## Queue costs
+
+`Transport/QueueCost.lean` compares two queue implementations at the
+cons-cell count.
+
+- `strictEnqueueTotal` is the total for `n` enqueues into a strict list;
+  `two_mul_strictEnqueueTotal` proves it is quadratic.
+- `twoListTotalCost` is `n` enqueues plus one refill of `n` elements;
+  `two_list_linear` proves it is linear.
+- `two_list_beats_strict` proves the two-list total is no worse from three
+  elements.
+
+This is a cost comparison for two implementations, not the general lower bound:
+the claim that any linear solution must change the representation or machine
+assumptions is a separate argument.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.
