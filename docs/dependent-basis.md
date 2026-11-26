@@ -66,11 +66,42 @@ invariant for arbitrary signatures.
 | B10 | logical relation or contextual equivalence | B8, B9 |
 | B11 | supercompiler translation and its transport theorem | B10 |
 
-B4 is the immediate work.  B5 is where the `case` motive's context extension
-has to commute with weakening.  B6--B10 are the object-theory metatheory.  B11 is the
-supercompiler itself.
+B4 is the immediate target, but it is not a direct patch to the existing
+`Weaken.lean`; section 4 records the two core limitations.  B5 is where the
+`case` motive's context extension has to commute with weakening.  B6--B10 are
+the object-theory metatheory.  B11 is the supercompiler itself.
 
-## 4. Scope of the checked layer
+## 4. B4 obstruction in the current core
+
+A direct general weakening proof is blocked by the shape of the current
+typing rule, not only by missing lemmas.
+
+1. `HasType.case` requires `ctor.paramTys = []` and `ctor.recArgs = []`.
+   The branch is therefore checked in the original context `Γ`, and the
+   branch type is just the motive at the constructor's nullary result.  A
+   constructor with arguments (`Vec.cons`, `Fin.succ`, a recursive field)
+   has no branch context and no branch type.  The dependent case rule is
+   missing, so `Vec` and `Fin` cannot be eliminated.
+2. `caseMotiveCtx` uses `ctxExtendMany`, which shifts each type as it adds
+   the next index.  The weakening renaming for a multi-index motive is
+   therefore not a single `upRenN`; it depends on the position in the
+   telescope.  The `Eq` proof works around this with `caseMotiveCtxEq`,
+   specialised to `params.length = 2` and a one-index family.  A general
+   proof needs either a telescope predicate with a context-morphism lemma,
+   or a context representation that does not shift the tail.
+
+The next stage is therefore:
+
+1. add a dependent `case` rule with a branch context for the constructor's
+   parameters and recursive fields, and a branch type at the constructor's
+   result indices;
+2. define a well-scoped telescope context and prove its weakening;
+3. then return to B4 for the full `HasType`.
+
+The checked B1--B3 layer remains useful: it supplies the scope predicate
+and the `substMany` commutation the new case rule needs.
+
+## 5. Scope of the checked layer
 
 The checked results are B1--B3:
 
@@ -88,7 +119,7 @@ They do not say that weakening holds for an arbitrary well-formed
 environment, that conversion is stable, or that a supercompiler exists.
 Those statements are stages B4--B11 above, and each needs its own proof.
 
-## 5. Why this order
+## 6. Why this order
 
 The supercompiler's residual program lives in a translated context.  Before
 the translation can be typed, the object theory must have:
@@ -103,7 +134,7 @@ then can the transport theorem be instantiated at the supercompiler's
 translation.  Proving the supercompiler first would leave the type-preservation
 claim without the lemmas it needs.
 
-## 6. Relation to the transport theorem
+## 7. Relation to the transport theorem
 
 `Transport/Spec.lean` states the transport data and the theorem schema.  The
 definitional instance and the beta instance are checked.  The indexed and
@@ -111,5 +142,5 @@ dependent instances await B4--B7.  The Cubical Agda development supplies the
 univalent/type-level packing used by the HoTT interpretation; it is not a
 replacement for the object-theory metatheory.
 
-The next concrete milestone is B4: derive general weakening for the full
-`HasType` from the scoped commutation and the signature invariant.
+The next concrete milestone is the dependent `case` rule and the telescope
+context; B4 follows once those are in place.
