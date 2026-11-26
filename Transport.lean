@@ -13,3 +13,4 @@ import Transport.IndexMigration
 import Transport.CommonAncestor
 import Transport.Cost
 import Transport.QueueCost
+import Transport.Mltt.Scoped

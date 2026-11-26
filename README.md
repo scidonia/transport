@@ -11,7 +11,9 @@ source type, and what has to be proved for the replacement to be sound.
 The problem statement is [docs/transport-mltt.md](docs/transport-mltt.md).  The
 paper plan, which relates the syntactic transport theorem to the homotopy
 interpretation, is [docs/paper.md](docs/paper.md).  The Lean development is
-summarised in [docs/formalization.md](docs/formalization.md).
+summarised in [docs/formalization.md](docs/formalization.md).  The
+metatheory needed for a full dependent supercompiler is staged in
+[docs/dependent-basis.md](docs/dependent-basis.md).
 
 ## Build
 
@@ -35,6 +37,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | result | Lean name |
 | --- | --- |
 | `Eq` `J` eliminator typechecks | `Transport.Mltt.J_has_type_proof` |
+| well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
+| `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
 | weakening for the `Eq` family | `Transport.Mltt.Weaken.hasType_weaken_proof` |
 | renaming and substitution algebra | `Transport.Mltt.Subst.*` |
 | substitution preserves typing on the function fragment | `Transport.Mltt.Fragment.hasType_subst_simple` |
@@ -143,6 +147,7 @@ doc comments are adapted to this repository; the proof bodies are unchanged.
 Transport/Mltt/Core.lean       syntax, contexts, indexed typing
 Transport/Mltt/J.lean          Eq/J typing proof
 Transport/Mltt/Weaken.lean     Eq weakening proof and renaming algebra
+Transport/Mltt/Scoped.lean     well-scoped terms and the proposed signature invariant
 Transport/Mltt/Subst.lean      substitution algebra and the fragment predicate
 Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
