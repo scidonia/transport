@@ -265,13 +265,15 @@ which univalence is the missing principle for the third regime.
 Lean's `Eq` is proof-irrelevant, so univalence cannot simply be added as an
 axiom there: `Transport/UnivalenceObstruction.lean` proves that the round-trip
 law forces the identity self-equivalence of `Bool` to equal negation.  The
-paper's HoTT experiment uses two reused univalent layers: Ground Zero's
-proof-relevant `Id` in `hott/` (Lean 4.27), and Cubical Agda's `_≡_` in
-`cubical/`.  Ground Zero's `uaweak` is the HoTT axiom over a proof-relevant
-identity type; its consistency is the standard cubical-sets/groupoid
-consistency, not mechanised there.  Kubus mechanises a cubical-sets model and
-canonicity.  The obstruction above is specific to Lean's proof-irrelevant
-`Eq`, not to HoTT.
+paper's HoTT experiment uses Cubical Agda (`cubical/`), a theory designed for
+HoTT with computational univalence and higher inductive types.  Binary vector
+packing is checked, including `uaβ`/`~uaβ` computation and the three-vector
+dependent-path coherence.  Lean 4 HoTT
+libraries were surveyed: Ground Zero is a synthetic library on an older Lean,
+HoTTLean formalises the meta-theory, and Kubus is a separate verified cubical
+proof assistant.  Kubus mechanises a cubical-sets model and canonicity; the
+survey is in `docs/lean-hott-survey.md`.  The obstruction above is specific to
+Lean's proof-irrelevant `Eq`, not to HoTT.
 
 The displayed-functor picture makes the same point structurally: the displayed
 category over `Ctx` can be discrete, a groupoid, or univalent.  The
@@ -304,14 +306,12 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` | proved |
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
-| Lean `ua`/`uaβ` via Ground Zero 4.27 | `hott/Hott/Univalence.lean` (`notTransport`) | checked |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
+| vector packing | `cubical/Packing.agda` | checked |
+| three-vector coherence | `cubical/Packing.agda` (`three-vector-coherence`) | checked |
 
 Trust: the main 4.35 core has no `sorry`, no `admit`, no `native_decide`, and
-no new `axiom`; `#print axioms` reports `propext` and `Quot.sound`.  The `hott`
-package is axiomatic HoTT by construction: it uses Ground Zero's `uaweak` and
-the `[GroundZero]` marker, so its trust statement is the vendored library's,
-not the core's.
+no new `axiom`; `#print axioms` reports `propext` and `Quot.sound`.
 
 The paper should include the Lean statements verbatim in an appendix and state
 the fragment boundary honestly.  The semantic case remains a paper-level
@@ -358,9 +358,10 @@ stated.
 - Displayed categories and fibrations: Ahrens and Lumsdaine; Shulman.
 - Homotopy type theory: the HoTT book; Awodey and Warren; Kapulkin and
   Lumsdaine; Shulman on univalent universes.
-- Lean 4 implementations: Ground Zero (synthetic HoTT library, `ua`/`uaβ`);
-  HoTTLean (groupoid model and SynthLean); Kubus (verified cubical proof
-  assistant with univalence and canonicity in its object language).
+- Lean 4 implementations evaluated but not used as the active layer:
+  Ground Zero (synthetic HoTT library, `ua`/`uaβ`); HoTTLean (groupoid model
+  and SynthLean); Kubus (verified cubical proof assistant with univalence and
+  canonicity in its object language).
 - Normalisation and logical relations for dependent types: Abel; Coquand;
   Sterling and Angiuli.
 - Type-preserving compilation and typed intermediate languages, as the

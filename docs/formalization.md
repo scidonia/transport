@@ -167,20 +167,31 @@ proof-relevant equality exists.
 
 Build: `nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'`.
 
-The Lean route is `hott/`.  It vendors Ground Zero at
-`2cbca29485c2e6f420c120365e00fe3b70db3acf` (Apache-2.0) under
-`vendor/ground_zero`, and pins Lean 4.27.0 for both the vendored library and
-the `hott` package.  `Hott.Univalence` uses `ua (ideqv A)` and `uaβ` over
-Ground Zero's proof-relevant `Id`/`Path`; the `[GroundZero]` marker instance is
-supplied explicitly.  `notTransport` is the nontrivial computation:
-`transportconst (ua notEquiv) true = false` for Boolean negation.  Ground
-Zero's `uaweak` remains an axiom, as upstream.
+Lean 4 HoTT libraries were surveyed and are not part of the active build.
+Ground Zero is a synthetic Lean 4 library with a proof-relevant `Id` and a
+large-elimination checker; it builds on Lean 4.27 and its `notTransport`
+computation checks, but it is pinned to an older Lean and does not mechanise a
+consistency model.  HoTTLean formalises the groupoid model and a proof mode on
+Lean 4.25 with Mathlib/Poly.  Kubus is a separate verified cubical proof
+assistant and is the trust anchor.  The survey and sources are in
+[lean-hott-survey.md](lean-hott-survey.md).
 
-The 4.27 pin is not arbitrary: Lean 4.35's `Transitive`/`Reflexive` classes are
-`Prop`-valued, while Ground Zero's `Id` is `Type`-valued.  We tested the meta
-layer on 4.35 (`collectAxioms`, `Level.quote`) and then hit `Types/Id.lean`;
-the library builds as written on 4.27 (98 jobs).  `sinhp/HoTTLean` needs
-Mathlib and Lean 4.25.0-rc2 and is not used.
+## Vector packing
+
+`cubical/Packing.agda` is stage 4.
+
+- `splitAt m` splits `Vec A (m + n)` into `Vec A m × Vec A n`.
+- `splitAt-++` and `pack-split` prove the two round trips.
+- `packEquiv` is the induced equivalence and `packPath` is its `ua` path.
+- `pack-transport` is `uaβ`: transport along the path computes to append.
+- `unpack-transport` is `~uaβ`: the backward transport computes to split.
+- `three-vector-coherence` is the library's `++-assoc`: the two packing routes
+  agree as a dependent path over `+-assoc`.
+
+Cubical Agda emits `UnsupportedIndexedMatch` warnings for `splitAt-++` and
+`pack-split`: those proofs rely on injectivity of the length constructors and
+do not compute under transports.  `splitAt`, `pack`, `uaβ`, and `~uaβ` are not
+affected.  The warning is a limitation to state in the paper, not a failure.
 
 ## Finite-index migration
 
@@ -272,7 +283,6 @@ derivation and still fail to compose under substitution.
 | logical relation or contextual equivalence | not defined |
 | supercompiler translation and transport proof | interface and beta instance only |
 | univalence over Lean's `Eq` | impossible (obstruction) |
-| univalence model, Lean | Ground Zero 4.27, reused in `hott/` |
 | univalence model, Cubical Agda | reused in `cubical/` |
 
 The paper plan explains why the last row is not a missing lemma: the semantic

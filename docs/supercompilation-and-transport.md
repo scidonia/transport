@@ -6,10 +6,11 @@
 > `Transport/IndexMigration.lean`.  Univalence is not axiomatised over
 > Lean's `Eq`: `Transport/UnivalenceObstruction.lean` proves the obstruction,
 > and the HoTT model reuses `cubical/Univalence.agda`.  The HoTT layer uses
-> Cubical Agda's path equality, separate from Lean's `Eq`.  The Lean HoTT
-> route is `hott/`, which vendors Ground Zero on Lean 4.27 and includes the
-> nontrivial `notTransport` computation; Cubical Agda remains the cross-check.  The commit reference in §1 records the starting
-> point, not the current state.
+> Cubical Agda's path equality, separate from Lean's `Eq`.  The univalent
+> layer is Cubical Agda (`cubical/`); Lean 4 HoTT libraries were surveyed and
+> are not part of the active build (`docs/lean-hott-survey.md`); the packing
+> and three-vector coherence are `cubical/Packing.agda`.  The commit reference
+> in §1 records the starting point, not the current state.
 
 # Supercompilation at terms and types
 
