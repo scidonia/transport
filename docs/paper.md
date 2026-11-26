@@ -356,6 +356,9 @@ stated.
 - Displayed categories and fibrations: Ahrens and Lumsdaine; Shulman.
 - Homotopy type theory: the HoTT book; Awodey and Warren; Kapulkin and
   Lumsdaine; Shulman on univalent universes.
+- Lean 4 implementations: Ground Zero (synthetic HoTT library, `ua`/`uaβ`);
+  HoTTLean (groupoid model and SynthLean); Kubus (verified cubical proof
+  assistant with univalence and canonicity in its object language).
 - Normalisation and logical relations for dependent types: Abel; Coquand;
   Sterling and Angiuli.
 - Type-preserving compilation and typed intermediate languages, as the

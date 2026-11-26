@@ -21,3 +21,17 @@ it unmodified.
 # with Lean 4.27.0 on PATH
 lake build
 ```
+
+## Related Lean 4 formalisations
+
+| project | what it is | fit here |
+| --- | --- | --- |
+| [`rzrn/ground_zero`](https://github.com/rzrn/ground_zero) | synthetic HoTT library: proof-relevant `Id`/`Path`, `ua`/`uaβ`, HITs via quotients, custom large-eliminator checker; Apache-2.0 | vendored here; Lean 4.27 |
+| [`sinhp/HoTTLean`](https://github.com/sinhp/HoTTLean) | groupoid model of HoTT and SynthLean proof mode; depends on Mathlib and Poly; Lean 4.25.0-rc2 | not a drop-in univalence library; heavier toolchain |
+| [`mitschabaude-bot/kubus`](https://github.com/mitschabaude-bot/kubus) | verified kernel for CCHM cubical type theory, univalence and canonicity in its object language; Lean 4.30 | separate proof assistant and `.ktt` language, not an importable Lean library |
+| [`theckl/cHoTT4`](https://github.com/theckl/cHoTT4) | Lean 4 model of cubical type theory (2024) | model development, not a maintained library |
+| [`merzougao/HoTT_Lean4`](https://github.com/merzougao/HoTT_Lean4) | early 2023 HoTT-in-Lean 4 start | not viable as a dependency |
+
+Ground Zero is the practical Lean 4 library with `ua`/`uaβ`; Kubus is the most
+thoroughly verified univalent *object theory*, but it is a separate proof
+assistant rather than a Lean import.
