@@ -38,6 +38,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | --- | --- |
 | `Eq` `J` eliminator typechecks | `Transport.Mltt.J_has_type_proof` |
 | dependent case for constructor telescopes (separate relation) | `Transport.Mltt.Dependent.HasTypeDep.caseDep` |
+| dependent case with a constructor parameter | `Transport.Mltt.Dependent.unit_caseDep` |
 | well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
 | weakening for the `Eq` family | `Transport.Mltt.Weaken.hasType_weaken_proof` |

@@ -69,4 +69,73 @@ inductive HasTypeDep (env : Env) : Ctx → Tm → Tm → Prop
       HasTypeDep env Γ (.case I n scrut C brs)
         (substMany ([scrut] ++ (args.drop sig.params.length).reverse) C)
 
+
+/-! ## A dependent case with a constructor parameter
+
+`Unit_sig` has one constructor `c (A : sort 1) : Unit`.  The case below
+eliminates it at the constant motive `sort 1`; the branch is a term in the
+branch context `[A : sort 1]`.
+-/
+
+def Unit_sig : IndSig where
+  params := []
+  indices := []
+  level := 0
+  ctors := [
+    { paramTys := [.sort 1], recArgs := [], indices := [] }
+  ]
+
+def unitVal : Tm := .roll 0 0 [.sort 0]
+
+theorem unitVal_hasType : HasType [Unit_sig] [] unitVal (.ind 0 []) := by
+  have hpos : strictlyPositive 0 Unit_sig = true := by
+    simp [strictlyPositive, occursInd, occursIndFuel, Tm.size, Unit_sig]
+  have hlook : lookupIndStrict [Unit_sig] 0 = some Unit_sig := by
+    simp [lookupIndStrict, lookupInd, lookup, hpos]
+  refine HasType.roll [] 0 Unit_sig 0 (Unit_sig.ctors[0]) [.sort 0] hlook ?_ ?_ ?_ ?_ ?_
+  · rfl
+  · rfl
+  · intro i a A ha _
+    simp [Unit_sig] at ha
+  · intro i a A ha hA
+    cases i with
+    | zero =>
+        simp [Unit_sig, substMany, Tm.subst] at ha hA
+        subst a
+        subst A
+        exact HasType.sort [] 0
+    | succ i =>
+        simp [Unit_sig] at ha
+  · intro i r idxs _ hidx
+    simp [Unit_sig] at hidx
+
+theorem unit_caseDep :
+    HasTypeDep [Unit_sig] []
+      (.case 0 0 unitVal (.sort 1) [.sort 0]) (.sort 1) := by
+  have hpos : strictlyPositive 0 Unit_sig = true := by
+    simp [strictlyPositive, occursInd, occursIndFuel, Tm.size, Unit_sig]
+  have hlook : lookupIndStrict [Unit_sig] 0 = some Unit_sig := by
+    simp [lookupIndStrict, lookupInd, lookup, hpos]
+  simpa [substMany, Tm.subst, Unit_sig] using
+    (HasTypeDep.caseDep [] 0 0 Unit_sig unitVal (.sort 1) [.sort 0] 2 []
+      hlook rfl rfl
+      (HasTypeDep.ofHasType unitVal_hasType)
+      (HasTypeDep.ofHasType (HasType.sort (env := [Unit_sig])
+        (caseMotiveCtx [] 0 Unit_sig
+          (List.take Unit_sig.params.length ([] : List Tm))) 1))
+      rfl
+      (by
+        intro c ctor br hctor hbr
+        cases c with
+        | zero =>
+            simp [Unit_sig, lookupCtor, lookup] at hctor
+            subst hctor
+            simp [Tm.branch] at hbr
+            subst hbr
+            simpa [branchCtx, branchTys, branchTy, branchVars, ctxExtendMany, ctxExtend,
+              substMany, Tm.subst, Unit_sig]
+              using (HasTypeDep.ofHasType (HasType.sort [.sort 1] 0))
+        | succ c =>
+            simp [Unit_sig, lookupCtor, lookup] at hctor))
+
 end Transport.Mltt.Dependent

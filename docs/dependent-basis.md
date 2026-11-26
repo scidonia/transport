@@ -84,7 +84,9 @@ typing rule, not only by missing lemmas.
    the constructor telescope `Δ_i`, and the branch result is the motive at
    the constructor's result indices and the `roll` term.  The old `HasType`
    is unchanged, so its existing proofs still hold; the new relation is not
-   yet used by the transport theorem.
+   yet used by the transport theorem.  `unit_caseDep` is a concrete
+   derivation: a one-constructor family with a type parameter, a branch
+   telescope `[A : sort 1]`, and the constant motive `sort 1`.
 2. `caseMotiveCtx` uses `ctxExtendMany`, which shifts each type as it adds
    the next index.  The weakening renaming for a multi-index motive is
    therefore not a single `upRenN`; it depends on the position in the
@@ -106,13 +108,16 @@ and the `substMany` commutation the new case rule needs.
 
 ## 5. Scope of the checked layer
 
-The checked theorems are B1--B3:
+The checked results are B1--B3 plus the dependent case rule and its
+concrete instance:
 
 ```text
 Transport.Mltt.Scoped.rename_upRenN_of_wellScoped
 Transport.Mltt.Scoped.eq_sig_wellFormed
 Transport.Mltt.Scoped.wellFormedEnv_Eq
 Transport.Mltt.Scoped.substMany_rename_of_wellScoped
+Transport.Mltt.Dependent.unitVal_hasType
+Transport.Mltt.Dependent.unit_caseDep
 ```
 
 They say that a term scoped by `d` is fixed by the identity renaming below
