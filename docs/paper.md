@@ -302,10 +302,14 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` | proved |
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
+| Lean `ua`/`uaβ` via Ground Zero 4.27 | `hott/Hott/Univalence.lean` | checked |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 
-Trust: no `sorry`, no `admit`, no `native_decide`, no new `axiom`;
-`#print axioms` reports `propext` and `Quot.sound`.
+Trust: the main 4.35 core has no `sorry`, no `admit`, no `native_decide`, and
+no new `axiom`; `#print axioms` reports `propext` and `Quot.sound`.  The `hott`
+package is axiomatic HoTT by construction: it uses Ground Zero's `uaweak` and
+the `[GroundZero]` marker, so its trust statement is the vendored library's,
+not the core's.
 
 The paper should include the Lean statements verbatim in an appendix and state
 the fragment boundary honestly.  The semantic case remains a paper-level

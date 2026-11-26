@@ -167,12 +167,18 @@ proof-relevant equality exists.
 
 Build: `nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'`.
 
-Existing Lean 4 alternatives were assessed.  `rzrn/ground_zero` has `ua` and
-`uaβ` in `GroundZero/Cubical/V.lean`, but pins Lean 4.28.  On 4.35 its meta
-layer needs `collectAxioms` and `Level.quote` patches, and then
-`GroundZero/Types/Id.lean` fails because `Transitive` is `Prop`-valued in 4.35
-while its `Id` is `Type`-valued.  A wholesale port is a migration, not a
-version bump.  `sinhp/HoTTLean` needs Mathlib and Lean 4.25.0-rc2.
+The Lean route is `hott/`.  It vendors Ground Zero at
+`2cbca29485c2e6f420c120365e00fe3b70db3acf` (Apache-2.0) under
+`vendor/ground_zero`, and pins Lean 4.27.0 for both the vendored library and
+the `hott` package.  `Hott.Univalence` uses `ua (ideqv A)` and `uaβ` over
+Ground Zero's proof-relevant `Id`/`Path`; the `[GroundZero]` marker instance is
+supplied explicitly.  Ground Zero's `uaweak` remains an axiom, as upstream.
+
+The 4.27 pin is not arbitrary: Lean 4.35's `Transitive`/`Reflexive` classes are
+`Prop`-valued, while Ground Zero's `Id` is `Type`-valued.  We tested the meta
+layer on 4.35 (`collectAxioms`, `Level.quote`) and then hit `Types/Id.lean`;
+the library builds as written on 4.27 (98 jobs).  `sinhp/HoTTLean` needs
+Mathlib and Lean 4.25.0-rc2 and is not used.
 
 ## Finite-index migration
 
@@ -264,7 +270,8 @@ derivation and still fail to compose under substitution.
 | logical relation or contextual equivalence | not defined |
 | supercompiler translation and transport proof | interface and beta instance only |
 | univalence over Lean's `Eq` | impossible (obstruction) |
-| univalence model | Cubical Agda library, reused in `cubical/` |
+| univalence model, Lean | Ground Zero 4.27, reused in `hott/` |
+| univalence model, Cubical Agda | reused in `cubical/` |
 
 The paper plan explains why the last row is not a missing lemma: the semantic
 regime needs either univalence or a logical relation, and neither is derivable

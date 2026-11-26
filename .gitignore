@@ -3,3 +3,6 @@
 __pycache__/
 *.pyc
 *.agdai
+
+/hott/.lake/
+/vendor/ground_zero/.lake/

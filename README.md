@@ -30,6 +30,13 @@ axiomatising univalence over Lean's `Eq`:
 nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'
 ```
 
+The Lean HoTT package is a separate 4.27 toolchain:
+
+```bash
+# with Lean 4.27.0 on PATH
+cd hott && lake build
+```
+
 ## What is proved
 
 | result | Lean name |
@@ -81,17 +88,22 @@ are equal.  `Transport/UnivalenceObstruction.lean` proves that a univalence map
 self-equivalence of `Bool` to equal negation.  Univalence is therefore not a
 missing axiom that can simply be added over Lean's `Eq`.
 
-The faithful model is `cubical/Univalence.agda`, which reuses the existing
-Cubical Agda library: `ua`, its computation rule `uaβ`, and `uaIdEquiv`, with a
-concrete transport through the univalence path of Boolean negation.
+There are two reused univalent layers.
+
+- **Lean:** `hott/` vendors Ground Zero at `2cbca29` (Apache-2.0) under
+  `vendor/ground_zero`, built on Lean 4.27.0.  `hott/Hott/Univalence.lean`
+  uses Ground Zero's `ua (ideqv A)` and `uaβ` over its proof-relevant
+  `Id`/`Path` type.  The 4.27 pin is forced: Lean 4.35's
+  `Transitive`/`Reflexive` classes are `Prop`-valued while Ground Zero's `Id`
+  is `Type`-valued.
+- **Cubical Agda:** `cubical/Univalence.agda` reuses `ua`, `uaβ`, and
+  `uaIdEquiv`, with a concrete transport through the univalence path of
+  Boolean negation.
 
 The two equalities are deliberately separate.  Lean's `Eq` is the equality of
-the object theory and the metatheory; the univalent layer uses Cubical Agda's
-path type `_≡_`.  The obstruction applies only to the former.
-
-`rzrn/ground_zero` is an existing Lean 4 HoTT library with `ua`/`uaβ`, but it
-pins Lean 4.28; its `Id` is `Type`-valued, while Lean 4.35's relation classes
-are `Prop`-valued, so it needs a library migration rather than a version bump.
+the object theory and the metatheory; the univalent layers use Ground Zero's
+proof-relevant `Id` and Cubical Agda's `_≡_`.  The obstruction applies only to
+Lean's `Eq`.
 
 ## What is open
 
@@ -128,6 +140,8 @@ Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness
 Transport/IndexMigration.lean  finite-index migration along length equations
+hott/                          vendored Ground Zero; Lean ua/ua-beta on 4.27
+vendor/ground_zero/            Ground Zero source at 2cbca29 (Apache-2.0)
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test
