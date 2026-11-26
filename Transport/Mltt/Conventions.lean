@@ -113,4 +113,94 @@ theorem eqDep_wellFormed : WellFormedSigFull EqDep_sig := by
     · intro idxs hidxs t ht
       simp at hidxs
 
+
+theorem vecDep_wellFormed : WellFormedSigFull VecDep_sig := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro p hp
+    simp [VecDep_sig] at hp
+    subst p
+    exact WellScoped.sort
+  · intro i hi
+    simp [VecDep_sig] at hi
+    subst i
+    exact WellScoped.ind (by intro a ha; simp at ha)
+  · intro ctor hc
+    simp [VecDep_sig] at hc
+    rcases hc with rfl | rfl
+    · refine ⟨?_, ?_, ?_⟩
+      · intro p hp
+        simp at hp
+      · intro i hi
+        simp at hi
+        subst i
+        exact WellScoped.roll (by intro a ha; simp at ha)
+      · intro idxs hidxs t ht
+        simp at hidxs
+    · refine ⟨?_, ?_, ?_⟩
+      · intro p hp
+        simp at hp
+        rcases hp with rfl | rfl
+        · exact WellScoped.ind (by intro a ha; simp at ha)
+        · exact WellScoped.var (by simp [VecDep_sig])
+      · intro i hi
+        simp at hi
+        subst i
+        exact WellScoped.roll (by
+          intro a ha
+          simp at ha
+          subst a
+          exact WellScoped.var (by simp [VecDep_sig]))
+      · intro idxs hidxs t ht
+        simp at hidxs
+        subst idxs
+        simp at ht
+        subst t
+        exact WellScoped.var (by simp [VecDep_sig])
+
+theorem finDep_wellFormed : WellFormedSigFull FinDep_sig := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro p hp
+    simp [FinDep_sig] at hp
+  · intro i hi
+    simp [FinDep_sig] at hi
+    subst i
+    exact WellScoped.ind (by intro a ha; simp at ha)
+  · intro ctor hc
+    simp [FinDep_sig] at hc
+    rcases hc with rfl | rfl
+    · refine ⟨?_, ?_, ?_⟩
+      · intro p hp
+        simp at hp
+        subst p
+        exact WellScoped.ind (by intro a ha; simp at ha)
+      · intro i hi
+        simp at hi
+        subst i
+        exact WellScoped.roll (by
+          intro a ha
+          simp at ha
+          subst a
+          exact WellScoped.var (by simp [FinDep_sig]))
+      · intro idxs hidxs t ht
+        simp at hidxs
+    · refine ⟨?_, ?_, ?_⟩
+      · intro p hp
+        simp at hp
+        subst p
+        exact WellScoped.ind (by intro a ha; simp at ha)
+      · intro i hi
+        simp at hi
+        subst i
+        exact WellScoped.roll (by
+          intro a ha
+          simp at ha
+          subst a
+          exact WellScoped.var (by simp [FinDep_sig]))
+      · intro idxs hidxs t ht
+        simp at hidxs
+        subst idxs
+        simp at ht
+        subst t
+        exact WellScoped.var (by simp [FinDep_sig])
+
 end Transport.Mltt.Conventions
