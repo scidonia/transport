@@ -174,6 +174,23 @@ layer needs `collectAxioms` and `Level.quote` patches, and then
 while its `Id` is `Type`-valued.  A wholesale port is a migration, not a
 version bump.  `sinhp/HoTTLean` needs Mathlib and Lean 4.25.0-rc2.
 
+## Finite-index migration
+
+`Transport/IndexMigration.lean` is stage 3.
+
+- `migrate h i` moves `i : Fin m` to `Fin n` along `h : m = n`; its value is
+  unchanged.
+- `migrate_val`, `migrate_refl`, `migrate_trans`, and `migrate_succ` give the
+  computation and coherence laws.
+- `SourceIndex xs ys` is `Fin (xs ++ ys).length`; `ResidualIndex xs ys` is
+  `Fin (xs.length + ys.length)`.
+- `migrateIndex` migrates along `List.length_append`; `migrateIndex_val`
+  preserves the value; `migrateIndex_map` shows stability under mapping the
+  element type.
+
+This is the identity eliminator at `Fin`, the definitional/propositional
+regime.  The univalent version is the Cubical Agda layer.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.

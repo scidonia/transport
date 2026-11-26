@@ -45,7 +45,13 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
 | first-order reverse certificate checker | `Transport.Certificate.revCert_check`, `revCert_sound` |
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` |
+| finite-index migration | `Transport.IndexMigration.migrateIndex_val`, `migrate_trans`, `migrateIndex_map` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
+
+The stage-3 index migration is in `Transport/IndexMigration.lean`: an index of
+`xs ++ ys` is migrated to the residual index `xs.length + ys.length` by the
+identity eliminator, with value preservation, composition, successor
+coherence, and stability under mapping the element type.
 
 The stage-2 certificate is in two layers.  `Transport/Certificate.lean` checks
 the source and generalised expressions and proves the accumulator worker
@@ -121,6 +127,7 @@ Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness
+Transport/IndexMigration.lean  finite-index migration along length equations
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test

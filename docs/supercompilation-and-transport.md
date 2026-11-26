@@ -2,7 +2,8 @@
 > `CtxRel` and `TyRel` are `Type`-valued in `Transport/Spec.lean`.  The orbit
 > baseline in §4 is `Transport/Orbit.lean`; the first reverse certificate in
 > §7 is `Transport/Certificate.lean`; the process-graph derivation is
-> `Transport/Derivation.lean`.  Univalence is not axiomatised over
+> `Transport/Derivation.lean`, and the index migration is
+> `Transport/IndexMigration.lean`.  Univalence is not axiomatised over
 > Lean's `Eq`: `Transport/UnivalenceObstruction.lean` proves the obstruction,
 > and the HoTT model reuses `cubical/Univalence.agda`.  The HoTT layer uses
 > Cubical Agda's path equality, separate from Lean's `Eq`.  The commit
