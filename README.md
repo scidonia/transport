@@ -34,6 +34,14 @@ No Lean dependencies.  The development uses Lean core and Std only.
 | beta contraction preserves typing on the fragment | `Transport.Mltt.Beta.beta_preserves_hasType` |
 | transport theorem schema | `Transport.transport_theorem` |
 | definitional transport, instantiated at beta | `Transport.BetaInstance.transport` |
+| orbit connectivity is an equivalence | `Transport.Orbit.orbitConnected_equivalence` |
+| typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
+
+The first component result is also in place: `Transport/Orbit.lean` proves that
+orbit connectivity is an equivalence for any endofunction, that
+`λx. (λy. y) x` and `λx. x` are typed fixed points of the outermost beta
+function, that they lie in different components, and that adding contraction
+under a binder connects them.  This does not assume normalisation.
 
 The transport theorem is stated as data, not assumed: a `Supercompiler` supplies
 the typing direction `HasType Γ t A → HasType (scCtx Γ) (scTm t) (scTy A)`, a
@@ -72,6 +80,7 @@ Transport/Mltt/Weaken.lean     Eq weakening proof and renaming algebra
 Transport/Mltt/Subst.lean      substitution algebra and the fragment predicate
 Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
+Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Spec.lean            translation, transport data, the theorem
 docs/                          problem statement, paper plan, formalisation map
 ```

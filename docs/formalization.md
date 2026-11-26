@@ -80,6 +80,25 @@ preserved by contraction.  The proof is the substitution lemma at the app
 rule's result type.  This is a non-identity translation, so it is the first
 concrete instance of the transport theorem rather than the identity instance.
 
+## Orbit connectivity
+
+`Transport/Orbit.lean` supplies the component theorem and the beta baseline.
+
+- `iter f n x` is the `n`-fold forward iterate (defined locally; Lean core does
+  not export the iterate API on this toolchain).
+- `OrbitConnected f p q` is `∃ m n, iter f m p = iter f n q`.
+- `orbitConnected_equivalence` proves it is an equivalence for any endofunction,
+  including one with infinite orbits.
+- `not_orbitConnected_of_fixed_ne` separates distinct fixed points.
+- `BetaInstance.identityTm` is `λx. x` and `BetaInstance.redexUnderBinder` is
+  `λx. (λy. y) x`; both are typed at `pi (sort 0) (sort 0)`.
+- `typed_fixed_points_disconnected` proves they are in different `beta`
+  components, and `typed_fixed_points_connected_after_binder` proves the binder
+  rule `betaBinder` connects them.
+
+This is a statement about the endofunction graph, not a reduction relation on
+the full indexed syntax.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.
