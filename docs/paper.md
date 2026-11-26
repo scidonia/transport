@@ -262,6 +262,13 @@ exists internally.  Without it, an equivalence is not an identity, and the
 semantic regime has no internal transport term.  This is the precise sense in
 which univalence is the missing principle for the third regime.
 
+Lean's `Eq` is proof-irrelevant, so univalence cannot simply be added as an
+axiom there: `Transport/UnivalenceObstruction.lean` proves that the round-trip
+law forces the identity self-equivalence of `Bool` to equal negation.  The
+paper's HoTT experiment therefore reuses the existing Cubical Agda library
+(`cubical/Univalence.agda`), where `ua`, `uaβ`, and `uaIdEquiv` are available
+and compute.
+
 The displayed-functor picture makes the same point structurally: the displayed
 category over `Ctx` can be discrete, a groupoid, or univalent.  The
 supercompiler's correctness theorem changes with that choice.
@@ -290,6 +297,8 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | beta fixed-point connection | `Transport.Orbit.BetaInstance.typed_fixed_points_connected_after_binder` | proved |
 | reverse certificate checker | `Transport.Certificate.revCert_check` | proved |
 | reverse certificate soundness | `Transport.Certificate.revCert_sound` | proved |
+| univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
+| reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 
 Trust: no `sorry`, no `admit`, no `native_decide`, no new `axiom`;
 `#print axioms` reports `propext` and `Quot.sound`.

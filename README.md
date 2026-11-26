@@ -23,6 +23,13 @@ nix develop -c lake build
 
 No Lean dependencies.  The development uses Lean core and Std only.
 
+The HoTT model reuses the existing Cubical Agda library rather than
+axiomatising univalence over Lean's `Eq`:
+
+```bash
+nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'
+```
+
 ## What is proved
 
 | result | Lean name |
@@ -37,6 +44,7 @@ No Lean dependencies.  The development uses Lean core and Std only.
 | orbit connectivity is an equivalence | `Transport.Orbit.orbitConnected_equivalence` |
 | typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
 | first-order reverse certificate checker | `Transport.Certificate.revCert_check`, `revCert_sound` |
+| univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
 The stage-2 certificate is in `Transport/Certificate.lean`: the source and
 generalised expressions are data, the checker decides their syntactic shape,
@@ -55,6 +63,22 @@ the typing direction `HasType Γ t A → HasType (scCtx Γ) (scTm t) (scTy A)`, 
 `TransportData` supplies the operation that reads a residual term back at the
 source context and type together with its soundness, and
 `Transport.transport_theorem` composes them.
+
+## Univalence
+
+Lean's identity type is a proposition, so any two proofs of the same equality
+are equal.  `Transport/UnivalenceObstruction.lean` proves that a univalence map
+`ua : (A ≃ B) → (A = B)` together with the round-trip law forces the identity
+self-equivalence of `Bool` to equal negation.  Univalence is therefore not a
+missing axiom that can simply be added over Lean's `Eq`.
+
+The faithful model is `cubical/Univalence.agda`, which reuses the existing
+Cubical Agda library: `ua`, its computation rule `uaβ`, and `uaIdEquiv`, with a
+concrete transport through the univalence path of Boolean negation.
+
+`rzrn/ground_zero` is an existing Lean 4 HoTT library with `ua`/`uaβ`, but it
+pins Lean 4.28; its `Id` is `Type`-valued, while Lean 4.35's relation classes
+are `Prop`-valued, so it needs a library migration rather than a version bump.
 
 ## What is open
 
@@ -89,7 +113,9 @@ Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
+Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
+cubical/Univalence.agda        reused Cubical Agda ua/uaβ test
 docs/                          problem statement, paper plan, formalisation map
 ```
 

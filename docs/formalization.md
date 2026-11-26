@@ -119,6 +119,38 @@ the full indexed syntax.
 This checks one certificate.  A general process graph, drive branches, and
 changed interfaces are not implemented.
 
+## Univalence
+
+Lean's `Eq` is a proposition, so proofs of the same equality are equal.
+`Transport/UnivalenceObstruction.lean` makes the consequence explicit:
+
+```lean
+theorem no_univalence_with_proof_irrelevant_eq
+    (ua : ∀ {A B : Type}, Equiv A B → A = B)
+    (ua_round : ∀ {A B : Type} (e : Equiv A B),
+      Equiv.ofEq (ua e) = e) : False
+```
+
+The proof uses the identity and negation self-equivalences of `Bool`:
+`ua_round boolNot` has type `Equiv.ofEq (ua boolNot) = boolNot`, and the left
+side reduces to the identity equivalence because `ua boolNot` is a proof of
+`Bool = Bool`.  So univalence is not an axiom one can add over Lean's `Eq`.
+
+The Cubical Agda file `cubical/Univalence.agda` reuses the existing library:
+
+- `ua-compute = uaβ`: transport along `ua e` computes to `equivFun e`;
+- `not-transport = uaβ notEquiv true`: a concrete Boolean migration;
+- `ua-id = uaIdEquiv`: the identity equivalence gives the identity path.
+
+Build: `nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Univalence.agda'`.
+
+Existing Lean 4 alternatives were assessed.  `rzrn/ground_zero` has `ua` and
+`uaβ` in `GroundZero/Cubical/V.lean`, but pins Lean 4.28.  On 4.35 its meta
+layer needs `collectAxioms` and `Level.quote` patches, and then
+`GroundZero/Types/Id.lean` fails because `Transitive` is `Prop`-valued in 4.35
+while its `Id` is `Type`-valued.  A wholesale port is a migration, not a
+version bump.  `sinhp/HoTTLean` needs Mathlib and Lean 4.25.0-rc2.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.
@@ -191,6 +223,8 @@ derivation and still fail to compose under substitution.
 | strong normalisation and confluence | open |
 | logical relation or contextual equivalence | not defined |
 | supercompiler translation and transport proof | interface and beta instance only |
+| univalence over Lean's `Eq` | impossible (obstruction) |
+| univalence model | Cubical Agda library, reused in `cubical/` |
 
 The paper plan explains why the last row is not a missing lemma: the semantic
 regime needs either univalence or a logical relation, and neither is derivable

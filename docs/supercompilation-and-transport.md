@@ -1,8 +1,10 @@
 > **Status.** The interface change described in §1 is implemented:
 > `CtxRel` and `TyRel` are `Type`-valued in `Transport/Spec.lean`.  The orbit
 > baseline in §4 is `Transport/Orbit.lean`; the first reverse certificate in
-> §7 is `Transport/Certificate.lean`.  The commit reference in §1 records the
-> starting point, not the current state.
+> §7 is `Transport/Certificate.lean`.  Univalence is not axiomatised over
+> Lean's `Eq`: `Transport/UnivalenceObstruction.lean` proves the obstruction,
+> and the HoTT model reuses `cubical/Univalence.agda`.  The commit reference in
+> §1 records the starting point, not the current state.
 
 # Supercompilation at terms and types
 

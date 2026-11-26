@@ -44,6 +44,19 @@
               printf 'transport: %s\n' "$(lean --version)"
             '';
           };
+
+          # The HoTT stage reuses the Cubical Agda library rather than
+          # axiomatising univalence over Lean's proof-irrelevant `Eq`.
+          cubical = pkgs.mkShell {
+            name = "transport-cubical";
+            packages = [
+              (pkgs.agda.withPackages (ps: [ ps.cubical ]))
+              pkgs.git
+            ];
+            shellHook = ''
+              printf 'transport-cubical: %s\n' "$(agda --version)"
+            '';
+          };
         }
       );
     };
