@@ -210,6 +210,20 @@ affected.  The warning is a limitation to state in the paper, not a failure.
 This is the identity eliminator at `Fin`, the definitional/propositional
 regime.  The univalent version is the Cubical Agda layer.
 
+## Common ancestors
+
+`Transport/CommonAncestor.lean` is stage 5's common-ancestor result.
+
+- `Star R` is the forward reflexive-transitive closure.
+- `Zigzag R` allows steps in either direction.
+- `CommonAncestor R p q` is `∃ h, Star R h p ∧ Star R h q`.
+- `CoConfluent R` says every two paths into a common descendant have a common
+  ancestor (confluence of the reversed relation).
+- `zigzag_compress` proves every zigzag compresses to a common-ancestor span.
+- `Succ` is the successor calculus on `Nat`; `star_succ_iff` characterises its
+  star, `succ_coconfluent` proves reverse confluence, and
+  `succ_zigzag_compress` is the concrete instance.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.

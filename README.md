@@ -46,6 +46,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | first-order reverse certificate checker | `Transport.Certificate.revCert_check`, `revCert_sound` |
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` |
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val`, `migrate_trans`, `migrateIndex_map` |
+| zigzag compression | `Transport.CommonAncestor.zigzag_compress` |
+| successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
 The stage-3 index migration is in `Transport/IndexMigration.lean`: an index of
@@ -135,6 +137,7 @@ Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness
 Transport/IndexMigration.lean  finite-index migration along length equations
+Transport/CommonAncestor.lean  zigzag compression and the successor instance
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test

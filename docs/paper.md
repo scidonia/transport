@@ -305,6 +305,8 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | reverse certificate soundness | `Transport.Certificate.revCert_sound` | proved |
 | reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` | proved |
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val` | proved |
+| zigzag compression | `Transport.CommonAncestor.zigzag_compress` | proved |
+| successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 | vector packing | `cubical/Packing.agda` | checked |
