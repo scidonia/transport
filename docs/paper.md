@@ -308,6 +308,8 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | zigzag compression | `Transport.CommonAncestor.zigzag_compress` | proved |
 | successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` | proved |
 | fork zigzag counterexample | `Transport.CommonAncestor.Fork.fork_zigzag_not_compressible` | proved |
+| quadratic reverse cost | `Transport.Cost.two_mul_reverseCost` | proved |
+| linear accumulator cost | `Transport.Cost.revAccCost_eq_length` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 | vector packing | `cubical/Packing.agda` | checked |

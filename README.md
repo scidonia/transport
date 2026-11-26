@@ -49,6 +49,9 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | zigzag compression | `Transport.CommonAncestor.zigzag_compress` |
 | successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` |
 | fork zigzag with no common ancestor | `Transport.CommonAncestor.Fork.fork_zigzag_not_compressible` |
+| quadratic naïve-reverse cost | `Transport.Cost.two_mul_reverseCost` |
+| linear accumulator cost | `Transport.Cost.revAccCost_eq_length` |
+| accumulator cheaper | `Transport.Cost.revAccCost_le_reverseCost` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
 The stage-3 index migration is in `Transport/IndexMigration.lean`: an index of
@@ -139,6 +142,7 @@ Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Derivation.lean      drive/fold/residualise derivation and soundness
 Transport/IndexMigration.lean  finite-index migration along length equations
 Transport/CommonAncestor.lean  zigzag compression and the successor instance
+Transport/Cost.lean            reversal cons-cell costs
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test

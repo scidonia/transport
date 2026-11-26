@@ -229,6 +229,18 @@ regime.  The univalent version is the Cubical Agda layer.
   fails; `fork_zigzag_not_compressible` is the minimal zigzag that cannot be
   compressed.  This shows the hypothesis is necessary.
 
+## Reversal costs
+
+`Transport/Cost.lean` is stage 5's cost model, counting allocated cons cells
+only.
+
+- `reverseCost` follows `reverse (x :: xs) = reverse xs ++ [x]`.
+- `revAccCost` is one cons per element.
+- `two_mul_reverseCost` proves `2 * reverseCost xs = xs.length * (xs.length + 1)`.
+- `revAccCost_eq_length` proves the accumulator is linear.
+- `revAccCost_le_reverseCost` proves it is never more expensive than the
+  naïve source.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.
