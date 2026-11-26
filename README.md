@@ -33,7 +33,7 @@ No Lean dependencies.  The corpus uses Lean core and Std only.
 | substitution preserves typing on the function fragment | `Transport.Mltt.Fragment.hasType_subst_simple` |
 | beta contraction preserves typing on the fragment | `Transport.Mltt.Beta.beta_preserves_hasType` |
 | transport theorem schema | `Transport.transport_theorem` |
-| definitional transport, instantiated at beta | `Transport.Beta.transport` |
+| definitional transport, instantiated at beta | `Transport.BetaInstance.transport` |
 
 The transport theorem is stated as data, not assumed: a `Supercompiler` supplies
 the typing direction `HasType Γ t A → HasType (scCtx Γ) (scTm t) (scTy A)`, a

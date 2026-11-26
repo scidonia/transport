@@ -184,7 +184,7 @@ terms and wrong under substitution.
 `Transport/Spec.lean` states the theorem and the identity instance.
 `Transport/Mltt/Beta.lean` provides a non-identity `scTm` (outermost beta
 contraction) and proves the typing direction on the fragment.  The composition
-is `Transport.Beta.transport`.
+is `Transport.BetaInstance.transport`.
 
 The mechanisation does **not** prove substitution stability for a general
 supercompiler; it proves the substitution lemma that a beta step needs.
@@ -269,7 +269,7 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | fragment substitution | `hasType_subst_simple`, `hasType_subst0_simple` | proved |
 | beta preservation | `beta_preserves_hasType` | proved |
 | transport schema | `transport_theorem` | proved |
-| beta transport instance | `Transport.Beta.transport` | proved |
+| beta transport instance | `Transport.BetaInstance.transport` | proved |
 
 Trust: no `sorry`, no `admit`, no `native_decide`, no new `axiom`;
 `#print axioms` reports `propext` and `Quot.sound`.
@@ -351,7 +351,7 @@ theorem beta_preserves_hasType {env Γ t A}
     (ht : HasType env Γ t A) (hs : Simple t) :
     HasType env Γ (beta t) A
 
-theorem Transport.Beta.transport {env Γ t A}
+theorem Transport.BetaInstance.transport {env Γ t A}
     (h : HasType env Γ t A) (hs : Mltt.Subst.Simple t) :
     HasType env Γ (beta t) A
 ```

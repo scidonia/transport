@@ -98,30 +98,7 @@ def identity : TransportData where
 
 end TransportData
 
-/-- A supercompiler that keeps the context and type fixed.  This is the
-restricted typed fragment: only the term changes. -/
-structure DefinitionalSupercompiler where
-  scTm : Tm → Tm
-  preserves : ∀ {env : Env} {Γ : Ctx} {t A : Tm},
-    HasType env Γ t A → HasType env Γ (scTm t) A
-
-namespace DefinitionalSupercompiler
-
-/-- Read the term translation as a `Supercompiler` at syntactic equality. -/
-def toSupercompiler (sc : DefinitionalSupercompiler) : Supercompiler where
-  translation := { scCtx := id, scTy := id, scTm := sc.scTm }
-  ctxRel := Eq
-  tyRel := Eq
-
-/-- The definitional regime is the `refl` case of the transport theorem. -/
-theorem transport (sc : DefinitionalSupercompiler)
-    {env : Env} {Γ : Ctx} {t A : Tm} (h : HasType env Γ t A) :
-    HasType env Γ (sc.scTm t) A :=
-  sc.preserves h
-
-end DefinitionalSupercompiler
-
-namespace Beta
+namespace BetaInstance
 
 open Transport.Mltt.Beta
 
@@ -141,6 +118,6 @@ theorem transport {env : Env} {Γ : Ctx} {t A : Tm}
     (fun _ => rfl) (fun _ => rfl)
     (fun h hs => beta_preserves_hasType h hs) h hs
 
-end Beta
+end BetaInstance
 
 end Transport

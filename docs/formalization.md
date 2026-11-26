@@ -120,12 +120,12 @@ theorem transport_theorem
 
 `TransportData.identity` is the syntactic-equality regime: `ctxRel = Eq`,
 `tyRel = Eq`, `transport = fun _ _ t => t`, and `sound` is `Eq.rec`.
-`Transport.Beta.transport` instantiates the theorem at beta contraction.
+`Transport.BetaInstance.transport` instantiates the theorem at beta contraction.
 
 Beta is deliberately a **term-level** translation, not a compositional one.
 Substituting a lambda for a variable can expose a redex that `beta` did not
 see, so `beta (t[sigma])` and `(beta t)[sigma]` are not equal in general.
-`Transport.Beta.transport` is therefore an instance of the basic theorem, not
+`Transport.BetaInstance.transport` is therefore an instance of the basic theorem, not
 of the substitution-natural theorem of §4.1 of the problem statement.  The
 distinction is the point: a supercompiler can be type-preserving on a closed
 derivation and still fail to compose under substitution.

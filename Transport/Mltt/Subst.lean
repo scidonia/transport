@@ -269,12 +269,6 @@ theorem upSub {σ : Nat → Tm} (hσ : ∀ x, Simple (σ x)) (x : Nat) :
   | zero => exact var 0
   | succ y => simpa [Tm.upSub] using shift (hσ y) 1 0
 
-theorem upSubN {σ : Nat → Tm} (hσ : ∀ x, Simple (σ x)) (m x : Nat) :
-    Simple (Tm.upSubN m σ x) := by
-  induction m generalizing x with
-  | zero => exact hσ x
-  | succ m ih => simpa [Tm.upSubN] using upSub ih x
-
 end Simple
 
 end Transport.Mltt.Subst
