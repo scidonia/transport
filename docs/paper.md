@@ -267,8 +267,9 @@ axiom there: `Transport/UnivalenceObstruction.lean` proves that the round-trip
 law forces the identity self-equivalence of `Bool` to equal negation.  The
 paper's HoTT experiment uses Cubical Agda (`cubical/`), a theory designed for
 HoTT with computational univalence and higher inductive types.  Binary vector
-packing is checked, including `uaβ`/`~uaβ` computation and the three-vector
-dependent-path coherence.  Lean 4 HoTT
+packing is checked, including `uaβ`/`~uaβ` computation, the three-vector
+dependent-path coherence, and the 2-path between the two composite packing
+paths.  Lean 4 HoTT
 libraries were surveyed: Ground Zero is a synthetic library on an older Lean,
 HoTTLean formalises the meta-theory, and Kubus is a separate verified cubical
 proof assistant.  Kubus mechanises a cubical-sets model and canonicity; the
@@ -316,6 +317,7 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 | vector packing | `cubical/Packing.agda` | checked |
+| packing-route 2-path | `cubical/Coherence.agda` (`two-path`) | checked |
 | three-vector coherence | `cubical/Packing.agda` (`three-vector-coherence`) | checked |
 
 Trust: the main 4.35 core has no `sorry`, no `admit`, no `native_decide`, and

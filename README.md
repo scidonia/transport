@@ -103,6 +103,11 @@ append associativity.  Cubical Agda warns that the round-trip proofs use
 indexed pattern matching and do not compute under transports; the `uaβ` and
 `~uaβ` computation laws themselves are checked.
 
+`cubical/Coherence.agda` proves the two composite packing routes agree: the
+forward functions are related by append associativity, `equivPathP` lifts that
+to a dependent path of equivalences, and univalence yields a 2-path between the
+two composite `ua` paths.
+
 Lean 4 HoTT libraries were surveyed and are not part of the active build:
 Ground Zero is a synthetic library pinned to an older Lean; HoTTLean
 formalises the meta-theory; Kubus is a separate verified cubical proof
@@ -152,6 +157,7 @@ Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test
 cubical/Packing.agda            vector packing, ua computation, three-vector coherence
+cubical/Coherence.agda          the 2-path between the composite packing paths
 docs/                          problem statement, paper plan, formalisation map
 ```
 

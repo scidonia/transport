@@ -9,7 +9,8 @@
 > Cubical Agda's path equality, separate from Lean's `Eq`.  The univalent
 > layer is Cubical Agda (`cubical/`); Lean 4 HoTT libraries were surveyed and
 > are not part of the active build (`docs/lean-hott-survey.md`); the packing
-> and three-vector coherence are `cubical/Packing.agda`; the common-ancestor
+> and three-vector coherence are `cubical/Packing.agda`, and the composite
+> 2-path is `cubical/Coherence.agda`; the common-ancestor
 > compression is `Transport/CommonAncestor.lean`; the reversal cost model is
 > `Transport/Cost.lean`; the queue comparison is `Transport/QueueCost.lean`.
 > The commit reference in §1 records the starting point, not the current

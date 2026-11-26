@@ -193,6 +193,15 @@ Cubical Agda emits `UnsupportedIndexedMatch` warnings for `splitAt-++` and
 do not compute under transports.  `splitAt`, `pack`, `uaβ`, and `~uaβ` are not
 affected.  The warning is a limitation to state in the paper, not a failure.
 
+`cubical/Coherence.agda` completes the coherence:
+
+- `D` is the common domain `(Vec l × Vec m) × Vec n`.
+- `E1` packs `(l,m)` then `n`; `E2` packs `(m,n)` then `l`, with the product
+  associator on the domain.
+- `hom` is the dependent path of forward functions given by `++-assoc`.
+- `equivPath` lifts it with `equivPathP`; `two-path` applies `ua` pointwise,
+  giving the 2-path between `ua E1` and `ua E2`.
+
 ## Finite-index migration
 
 `Transport/IndexMigration.lean` is stage 3.
