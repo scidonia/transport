@@ -158,6 +158,15 @@ theorem fork_not_coconfluent : ¬ CoConfluent ForkStep := by
   intro hc
   exact no_commonAncestor_AB (hc (Star.single ForkStep.ac) (Star.single ForkStep.bc))
 
+/-- Zigzag connectivity is strictly weaker than forward reachability: the
+fork is a zigzag from `A` to `B`, but no forward path exists. -/
+theorem fork_zigzag_not_forward :
+    Zigzag ForkStep ForkNode.A ForkNode.B ∧
+      ¬ Star ForkStep ForkNode.A ForkNode.B := by
+  refine ⟨forkZigzag, ?_⟩
+  intro h
+  rcases star_from_A h with hB | hB <;> cases hB
+
 /-- A minimal zigzag that cannot be compressed to a common-ancestor span. -/
 theorem fork_zigzag_not_compressible :
     Zigzag ForkStep .A .B ∧ ¬ CommonAncestor ForkStep .A .B :=

@@ -49,6 +49,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | zigzag compression | `Transport.CommonAncestor.zigzag_compress` |
 | successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` |
 | fork zigzag with no common ancestor | `Transport.CommonAncestor.Fork.fork_zigzag_not_compressible` |
+| zigzag vs forward reachability | `Transport.CommonAncestor.Fork.fork_zigzag_not_forward` |
 | quadratic naïve-reverse cost | `Transport.Cost.two_mul_reverseCost` |
 | linear accumulator cost | `Transport.Cost.revAccCost_eq_length` |
 | accumulator cheaper | `Transport.Cost.revAccCost_le_reverseCost` |

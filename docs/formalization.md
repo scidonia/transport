@@ -227,7 +227,9 @@ regime.  The univalent version is the Cubical Agda layer.
   and `star_from_B` characterise its paths; `no_commonAncestor_AB` proves the
   fork has no common ancestor; `fork_not_coconfluent` shows reverse confluence
   fails; `fork_zigzag_not_compressible` is the minimal zigzag that cannot be
-  compressed.  This shows the hypothesis is necessary.
+  compressed.  This shows the hypothesis is necessary.  `fork_zigzag_not_forward`
+  proves the same fork is a zigzag from `A` to `B` but has no forward path,
+  so zigzag connectivity is strictly weaker than forward reachability.
 
 ## Reversal costs
 
