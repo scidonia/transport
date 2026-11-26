@@ -830,7 +830,7 @@ theorem hasType_rename {Γ : Ctx} {t A : Tm}
             (eqCtor.indices.map (substParams (args.take Eq_sig.params.length))).reverse).length = 2 := by
           simp [eqCtor, Eq_sig]
         rw [hlenys] at h1
-        -- target branch type
+        -- expected branch type
         have hys : (([Tm.roll I b (args.take Eq_sig.params.length)] ++
               (eqCtor.indices.map (substParams (args.take Eq_sig.params.length))).reverse).map (Tm.rename ρ))
             = ([Tm.roll I b ((args.map (Tm.rename ρ)).take Eq_sig.params.length)] ++

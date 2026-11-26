@@ -1,18 +1,19 @@
 import Std
 
 /-!
-# MLTT core, stage M0a: indexed syntax
+# MLTT core: indexed syntax and typing
 
-This is the Lean substrate for the MLTT contextual-equivalence experiment.
-It deliberately differs from `Scidonia.Cyclic.Syntax.Term` in the Lean examples:
+This is the syntactic substrate for the transport development.  It is ported
+from the `proof-approach` MLTT stage and deliberately differs from
+`Scidonia.Cyclic.Syntax.Term` in the Lean examples:
 
 * `ind` carries its parameters and indices;
 * `roll` carries all constructor arguments;
 * `case` carries a motive `C` that binds the scrutinee, so the result type is
   `subst0 scrut C`, not simply `C`.
 
-Typing and semantics are later stages.  This file only fixes the syntax and the
-renaming/substitution operations the later stages depend on.
+The file fixes the syntax, renaming and substitution, signatures, and the
+typing judgment over which the transport theorem is stated.
 -/
 
 namespace Transport.Mltt
@@ -379,7 +380,7 @@ inductive HasType (env : Env) : Ctx → Tm → Tm → Prop
       HasType env Γ (.case I n scrut C brs)
         (substMany ([scrut] ++ (args.drop sig.params.length).reverse) C)
 
-/-! ### First typed target: Eq/J
+/-! ### The Eq/J eliminator
 
 `J A x P d y p = case p of refl => d`, with motive `P y p`.
 -/

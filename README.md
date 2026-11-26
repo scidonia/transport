@@ -60,8 +60,8 @@ rather than a missing lemma.
 
 The MLTT syntax and typing rules, the `J` typing proof, and the `Eq` weakening
 proof are ported from `scidonia/proof-approach` at commit `4e1ba39`.  Their
-namespaces are changed from `Problems.Hard.*` to `Transport.Mltt.*`; the proofs
-are unchanged.
+namespaces are changed from `Problems.Hard.*` to `Transport.Mltt.*` and the
+doc comments are adapted to this repository; the proof bodies are unchanged.
 
 ## Layout
 
