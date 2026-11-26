@@ -44,13 +44,16 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | orbit connectivity is an equivalence | `Transport.Orbit.orbitConnected_equivalence` |
 | typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
 | first-order reverse certificate checker | `Transport.Certificate.revCert_check`, `revCert_sound` |
+| reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
-The stage-2 certificate is in `Transport/Certificate.lean`: the source and
-generalised expressions are data, the checker decides their syntactic shape,
-and `revCert_sound` proves that the residual accumulator worker returns the
-source value for every closing substitution.  The fold decrease is explicit.
-This is one certificate, not yet a general process graph.
+The stage-2 certificate is in two layers.  `Transport/Certificate.lean` checks
+the source and generalised expressions and proves the accumulator worker
+returns the source value for every closing substitution.  `Transport/Derivation.lean`
+adds the process graph: configurations, drive/fold/residualise edges, and a
+derivation whose type is the certificate.  Its soundness theorem quantifies
+over every input and accumulator, and the fold decrease is explicit.  This is
+one worker, not yet a general process-graph engine.
 
 The first component result is also in place: `Transport/Orbit.lean` proves that
 orbit connectivity is an equivalence for any endofunction, that
@@ -117,6 +120,7 @@ Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker
+Transport/Derivation.lean      drive/fold/residualise derivation and soundness
 Transport/UnivalenceObstruction.lean  no univalence over proof-irrelevant Eq
 Transport/Spec.lean            translation, transport data, the theorem
 cubical/Univalence.agda        reused Cubical Agda ua/uaβ test

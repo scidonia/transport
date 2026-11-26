@@ -299,6 +299,7 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | beta fixed-point connection | `Transport.Orbit.BetaInstance.typed_fixed_points_connected_after_binder` | proved |
 | reverse certificate checker | `Transport.Certificate.revCert_check` | proved |
 | reverse certificate soundness | `Transport.Certificate.revCert_sound` | proved |
+| reverse derivation soundness | `Transport.Derivation.Reverse.derivation_residual` | proved |
 | univalence obstruction over `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` | proved |
 | reused Cubical Agda univalence | `cubical/Univalence.agda` | checked |
 

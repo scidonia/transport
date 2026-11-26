@@ -119,6 +119,24 @@ the full indexed syntax.
 This checks one certificate.  A general process graph, drive branches, and
 changed interfaces are not implemented.
 
+## Derivation
+
+`Transport/Derivation.lean` adds the process-graph layer for the same worker.
+
+- `Config α` is `(xs, a)`; `denote` is `xs.reverse ++ a`.
+- `Edge` has `driveNil`, `driveCons`, `fold`, and `residualise` constructors,
+  with source and target configurations as indices.
+- `Edge.sound` proves every edge preserves `denote`; `Edge.fold_decrease`
+  proves the recursive input is a proper subterm.
+- `Derivation` is a finite chain of edges; `Derivation.sound` composes the
+  edge soundness theorems.
+- `Reverse.derivation` builds the derivation for every input and accumulator;
+  `Reverse.derivation_sound` and `Reverse.derivation_residual` state the
+  worker's correctness.
+
+The type indices are the certificate; Lean's kernel checks it.  This is still
+one worker, not a general process-graph engine.
+
 ## Univalence
 
 Lean's `Eq` is a proposition, so proofs of the same equality are equal.
