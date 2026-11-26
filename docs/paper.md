@@ -192,6 +192,11 @@ is `Transport.BetaInstance.transport`.
 The mechanisation does **not** prove substitution stability for a general
 supercompiler; it proves the substitution lemma that a beta step needs.
 
+Stage 2's first instance is `Transport/Certificate.lean`: a first-order list
+expression language, the reverse-accumulator generalisation, a syntactic
+certificate checker, and a soundness theorem over all closing substitutions.
+It checks one certificate, not a general process graph.
+
 A separate component baseline is mechanised.  `Transport/Orbit.lean` defines
 orbit connectivity for an arbitrary endofunction, proves it is an equivalence,
 and instantiates it at the outermost beta function.  The two typed fixed points
@@ -283,6 +288,8 @@ exists; *if* it is only an equivalence, the theorem is semantic.
 | orbit connectivity | `Transport.Orbit.orbitConnected_equivalence` | proved |
 | beta fixed-point separation | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected` | proved |
 | beta fixed-point connection | `Transport.Orbit.BetaInstance.typed_fixed_points_connected_after_binder` | proved |
+| reverse certificate checker | `Transport.Certificate.revCert_check` | proved |
+| reverse certificate soundness | `Transport.Certificate.revCert_sound` | proved |
 
 Trust: no `sorry`, no `admit`, no `native_decide`, no new `axiom`;
 `#print axioms` reports `propext` and `Quot.sound`.

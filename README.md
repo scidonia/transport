@@ -36,6 +36,13 @@ No Lean dependencies.  The development uses Lean core and Std only.
 | definitional transport, instantiated at beta | `Transport.BetaInstance.transport` |
 | orbit connectivity is an equivalence | `Transport.Orbit.orbitConnected_equivalence` |
 | typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
+| first-order reverse certificate checker | `Transport.Certificate.revCert_check`, `revCert_sound` |
+
+The stage-2 certificate is in `Transport/Certificate.lean`: the source and
+generalised expressions are data, the checker decides their syntactic shape,
+and `revCert_sound` proves that the residual accumulator worker returns the
+source value for every closing substitution.  The fold decrease is explicit.
+This is one certificate, not yet a general process graph.
 
 The first component result is also in place: `Transport/Orbit.lean` proves that
 orbit connectivity is an equivalence for any endofunction, that
@@ -81,6 +88,7 @@ Transport/Mltt/Subst.lean      substitution algebra and the fragment predicate
 Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
+Transport/Certificate.lean     first-order reverse certificate and checker
 Transport/Spec.lean            translation, transport data, the theorem
 docs/                          problem statement, paper plan, formalisation map
 ```

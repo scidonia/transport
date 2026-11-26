@@ -99,6 +99,26 @@ concrete instance of the transport theorem rather than the identity instance.
 This is a statement about the endofunction graph, not a reduction relation on
 the full indexed syntax.
 
+## First-order certificate
+
+`Transport/Certificate.lean` is the first stage-2 certificate.
+
+- `LExp` is a first-order list expression language; `LExp.eval` interprets it
+  under a closing environment.
+- `genExpr` is `append (reverse (var 0)) (var 1)`, and `genEval_step` proves
+  the fold equation `genEval (x :: xs) a = genEval xs (x :: a)`.
+- `revAcc` is the residual accumulator worker; `revAcc_reverse` proves it
+  returns the source value at the initial accumulator.
+- `RevCert` stores the source, generalisation, fold parameter, accumulator
+  parameter, and initial accumulator as data; `RevCert.check` decides the
+  syntactic predicate.
+- `revCert_sound` quantifies over every closing substitution (`∀ xs`) and
+  proves the worker equals the source expression; `fold_decrease` records the
+  structural decrease.
+
+This checks one certificate.  A general process graph, drive branches, and
+changed interfaces are not implemented.
+
 ## The transport theorem
 
 `Transport/Spec.lean` fixes the interfaces.
