@@ -75,3 +75,7 @@ Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Spec.lean            translation, transport data, the theorem
 docs/                          problem statement, paper plan, formalisation map
 ```
+
+## License
+
+Apache License 2.0.  See [LICENSE](LICENSE).
