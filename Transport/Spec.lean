@@ -24,14 +24,22 @@ structure Translation where
   scTy : Tm → Tm
   scTm : Tm → Tm
 
-/-- A relation between source and residual contexts. -/
-abbrev CtxRel := Ctx → Ctx → Prop
+/-- A proof-relevant relation between source and residual contexts.  The
+witness is data: two certificates with the same endpoints can differ. -/
+abbrev CtxRel := Ctx → Ctx → Type
 
-/-- A relation between source and residual types. -/
-abbrev TyRel := Tm → Tm → Prop
+/-- A proof-relevant relation between source and residual types. -/
+abbrev TyRel := Tm → Tm → Type
+
+/-- Proof-relevant equality.  A syntactic-equality certificate is data rather
+than a proposition, so it can be stored and compared. -/
+structure EqT {α : Type} (a b : α) : Type where
+  eq : a = b
 
 /-- A transport operation and the typing fact that makes it sound.  `transport`
-takes a residual term in `Γ'` at `A'` to a source-context term in `Γ` at `A`. -/
+takes a residual term in `Γ'` at `A'` to a source-context term in `Γ` at `A`.
+The relations are `Type`-valued, so the certificate is data; `sound` remains a
+proposition. -/
 structure TransportData where
   ctxRel : CtxRel
   tyRel : TyRel
@@ -87,13 +95,12 @@ namespace TransportData
 /-- The identity regime: source and residual contexts and types are
 syntactically equal, and the transport is the identity on terms. -/
 def identity : TransportData where
-  ctxRel := Eq
-  tyRel := Eq
+  ctxRel := fun Γ Γ' => EqT Γ Γ'
+  tyRel := fun A A' => EqT A A'
   transport := fun _ _ t => t
   sound := by
     intro env Γ Γ' A A' t hΓ hA ht
-    cases hΓ
-    cases hA
+    rw [← hΓ.eq, ← hA.eq] at ht
     exact ht
 
 end TransportData
@@ -106,8 +113,8 @@ open Transport.Mltt.Beta
 the context and type are unchanged, and the transport is `refl`. -/
 def asSupercompiler : Supercompiler where
   translation := { scCtx := id, scTy := id, scTm := beta }
-  ctxRel := Eq
-  tyRel := Eq
+  ctxRel := fun Γ Γ' => EqT Γ Γ'
+  tyRel := fun A A' => EqT A A'
 
 /-- The transport theorem instantiated at beta contraction.  This is a
 non-identity supercompiler: `beta t` is not definitionally `t` on a redex. -/
@@ -115,7 +122,7 @@ theorem transport {env : Env} {Γ : Ctx} {t A : Tm}
     (h : HasType env Γ t A) (hs : Mltt.Subst.Simple t) :
     HasType env Γ (beta t) A :=
   transport_theorem_fragment asSupercompiler TransportData.identity
-    (fun _ => rfl) (fun _ => rfl)
+    (fun _ => ⟨rfl⟩) (fun _ => ⟨rfl⟩)
     (fun h hs => beta_preserves_hasType h hs) h hs
 
 end BetaInstance

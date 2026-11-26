@@ -105,6 +105,10 @@ structure Supercompiler where
   tyRel : TyRel
 ```
 
+The relations are `Type`-valued: the chosen substitution or migration map is
+data, and two certificates with the same endpoints can differ.  `sound` stays
+in `Prop`.
+
 `transport_theorem` composes a `Supercompiler` with a `TransportData`:
 
 ```lean

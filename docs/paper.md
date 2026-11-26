@@ -155,9 +155,12 @@ $$
 \Gamma \vdash transport\,(scTm\,t) : A.
 $$
 
-The content is in the data, not in the composition.  The paper should say this
-plainly: the theorem is a schema, and the research question is which instance
-of the schema a given supercompiler admits.
+The relations are `Type`-valued, so a certificate is data: two transformations
+with the same endpoints can carry different substitutions, folds, or migration
+maps.  Only soundness is a proposition.  The content is in the data, not in the
+composition.  The paper should say this plainly: the theorem is a schema, and
+the research question is which instance of the schema a given supercompiler
+admits.
 
 ### 4.1 Coherence
 
