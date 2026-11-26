@@ -265,11 +265,13 @@ which univalence is the missing principle for the third regime.
 Lean's `Eq` is proof-irrelevant, so univalence cannot simply be added as an
 axiom there: `Transport/UnivalenceObstruction.lean` proves that the round-trip
 law forces the identity self-equivalence of `Bool` to equal negation.  The
-paper's HoTT experiment therefore reuses the existing Cubical Agda library
-(`cubical/Univalence.agda`), where `ua`, `uaβ`, and `uaIdEquiv` are available
-and compute.  The two equalities are kept separate: Lean's `Eq` carries the
-object theory and the transport theorem; Cubical Agda's `_≡_` carries the
-univalent layer.
+paper's HoTT experiment uses two reused univalent layers: Ground Zero's
+proof-relevant `Id` in `hott/` (Lean 4.27), and Cubical Agda's `_≡_` in
+`cubical/`.  Ground Zero's `uaweak` is the HoTT axiom over a proof-relevant
+identity type; its consistency is the standard cubical-sets/groupoid
+consistency, not mechanised there.  Kubus mechanises a cubical-sets model and
+canonicity.  The obstruction above is specific to Lean's proof-irrelevant
+`Eq`, not to HoTT.
 
 The displayed-functor picture makes the same point structurally: the displayed
 category over `Ctx` can be discrete, a groupoid, or univalent.  The

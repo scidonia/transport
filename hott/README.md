@@ -22,6 +22,18 @@ it unmodified.
 lake build
 ```
 
+## Consistency
+
+Univalence over a proof-relevant identity type is an axiom of HoTT and is
+consistent relative to cubical sets and groupoids.  Ground Zero takes
+`uaweak` as an axiom and uses a large-eliminator checker; it does not
+formalise the consistency model.  Kubus does, with a verified kernel, a
+cubical-sets model, and canonicity.
+
+The inconsistency in `Transport/UnivalenceObstruction.lean` is specific to
+Lean's proof-irrelevant `Eq` plus the full round-trip law.  It is not a
+statement against HoTT or against Ground Zero's `Id`.
+
 ## Related Lean 4 formalisations
 
 | project | what it is | fit here |
