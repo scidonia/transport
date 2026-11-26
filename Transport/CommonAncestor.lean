@@ -104,4 +104,65 @@ theorem succ_zigzag_compress {p q : Nat} (h : Zigzag Succ p q) :
     CommonAncestor Succ p q :=
   zigzag_compress succ_coconfluent h
 
+
+/-! ## A fork without a common ancestor -/
+
+/-- Three nodes with a fork `A → C ← B`. -/
+inductive ForkNode : Type
+  | A | B | C
+
+/-- The two fork edges. -/
+inductive ForkStep : ForkNode → ForkNode → Prop
+  | ac : ForkStep .A .C
+  | bc : ForkStep .B .C
+
+namespace Fork
+
+theorem star_from_C {y : ForkNode} (h : Star ForkStep .C y) : y = .C := by
+  cases h with
+  | refl _ => rfl
+  | step hstep _ => cases hstep
+
+theorem star_from_A {y : ForkNode} (h : Star ForkStep .A y) :
+    y = .A ∨ y = .C := by
+  cases h with
+  | refl _ => exact Or.inl rfl
+  | step hstep tail =>
+      cases hstep with
+      | ac => exact Or.inr (star_from_C tail)
+
+theorem star_from_B {y : ForkNode} (h : Star ForkStep .B y) :
+    y = .B ∨ y = .C := by
+  cases h with
+  | refl _ => exact Or.inl rfl
+  | step hstep tail =>
+      cases hstep with
+      | bc => exact Or.inr (star_from_C tail)
+
+/-- `A` and `B` have no common ancestor. -/
+theorem no_commonAncestor_AB : ¬ CommonAncestor ForkStep .A .B := by
+  rintro ⟨h, hhA, hhB⟩
+  cases h with
+  | A => rcases star_from_A hhB with hB | hB <;> cases hB
+  | B => rcases star_from_B hhA with hA | hA <;> cases hA
+  | C =>
+      have hA : ForkNode.A = ForkNode.C := star_from_C hhA
+      cases hA
+
+/-- The zigzag `A → C ← B`. -/
+theorem forkZigzag : Zigzag ForkStep ForkNode.A ForkNode.B :=
+  Zigzag.fwd ForkStep.ac (Zigzag.bwd ForkStep.bc (Zigzag.refl ForkNode.B))
+
+/-- The reverse relation is not confluent. -/
+theorem fork_not_coconfluent : ¬ CoConfluent ForkStep := by
+  intro hc
+  exact no_commonAncestor_AB (hc (Star.single ForkStep.ac) (Star.single ForkStep.bc))
+
+/-- A minimal zigzag that cannot be compressed to a common-ancestor span. -/
+theorem fork_zigzag_not_compressible :
+    Zigzag ForkStep .A .B ∧ ¬ CommonAncestor ForkStep .A .B :=
+  ⟨forkZigzag, no_commonAncestor_AB⟩
+
+end Fork
+
 end Transport.CommonAncestor

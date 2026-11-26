@@ -48,6 +48,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | finite-index migration | `Transport.IndexMigration.migrateIndex_val`, `migrate_trans`, `migrateIndex_map` |
 | zigzag compression | `Transport.CommonAncestor.zigzag_compress` |
 | successor common ancestors | `Transport.CommonAncestor.succ_zigzag_compress` |
+| fork zigzag with no common ancestor | `Transport.CommonAncestor.Fork.fork_zigzag_not_compressible` |
 | univalence cannot be added over Lean's `Eq` | `Transport.Obstruction.no_univalence_with_proof_irrelevant_eq` |
 
 The stage-3 index migration is in `Transport/IndexMigration.lean`: an index of

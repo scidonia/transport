@@ -223,6 +223,11 @@ regime.  The univalent version is the Cubical Agda layer.
 - `Succ` is the successor calculus on `Nat`; `star_succ_iff` characterises its
   star, `succ_coconfluent` proves reverse confluence, and
   `succ_zigzag_compress` is the concrete instance.
+- `ForkNode`/`ForkStep` is the fork `A → C ← B`.  `star_from_C`, `star_from_A`,
+  and `star_from_B` characterise its paths; `no_commonAncestor_AB` proves the
+  fork has no common ancestor; `fork_not_coconfluent` shows reverse confluence
+  fails; `fork_zigzag_not_compressible` is the minimal zigzag that cannot be
+  compressed.  This shows the hypothesis is necessary.
 
 ## The transport theorem
 
