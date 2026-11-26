@@ -1,0 +1,4 @@
+/.lake
+/.direnv/
+__pycache__/
+*.pyc

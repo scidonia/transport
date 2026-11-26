@@ -1,0 +1,9 @@
+name = "transport"
+version = "0.1.0"
+defaultTargets = ["Transport"]
+
+# The MLTT core and the transport development are one library.  The copied
+# stage proofs (J typing, Eq weakening) are modules in it, so `lake build`
+# checks them with the rest.
+[[lean_lib]]
+name = "Transport"
