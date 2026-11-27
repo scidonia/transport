@@ -90,10 +90,19 @@ This is the simplest genuinely dependent Pi certificate.
 - There is a semantic `PiCert` over arbitrary index types, families, and
   fiberwise relations, with a polymorphic identity certificate `polyIdPiCert`
   in `Transport/DependentPi.lean`.
-- The object-language `LR` is a **canonical value** relation: it has clauses for
-  sorts, Pi types, and lambdas, but no application, reduction, or operational
-  step.  It is a first object-language certificate, not yet the full action
-  interface.
+The first object-language attempt exposed two structural obstacles.
+
+1. The core `Tm` is a **nested inductive**: `ind`, `roll`, and `case` carry
+   `List Tm`.  `induction` does not support it directly, and proofs over its
+   subterms need explicit recursive definitions.
+2. A Pi relation written as an inductive has a **non-strictly-positive**
+   occurrence: the Pi clause quantifies over all related arguments and then
+   returns the relation at the codomain.  Lean rejects that inductive.
+
+The object relation therefore needs either a separate dependent syntax or a
+contextual definition, not an inductive over the core `Tm`.  The closedness
+layer is kept as preparation; the semantic Pi certificate remains the checked
+dependent certificate.
 
 ## What is needed
 
