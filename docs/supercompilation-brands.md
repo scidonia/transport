@@ -88,18 +88,21 @@ The action layer is now parameterised:
 - `Transport/ActionReverse.lean` instantiates the reverse source/residual
   processes and proves `reverseDerivation_sound`.
 
+Generic generalisation is also in place: `Action.GenCert` is parameterised by a
+process pair and a parameter type, and `Derivation.generalise` carries it.
+`ActionReverse.reverseGenCert`/`reverseGeneralised` are the regression instance.
+
 Still specific to reverse/`Certified`:
 
-- `GenCert` over the accumulator;
-- the `ListRel` base relation;
+- the list base relation `ListRel`;
 - the `RDerivation` action tree built on the specific reverse types.
 
 To support other brands, continue with:
 
-1. a generic `Gen` certificate interface (schema parameters + proof);
-2. a typed `LR`/bisimulation for the target types;
-3. a selection/whistle/oracle interface;
-4. a result shape: single term, forest, or positive/negative set.
+1. a typed `LR`/bisimulation for the target types, parameterised over the process;
+2. a selection/whistle/oracle interface;
+3. a result shape: single term, forest, or positive/negative set;
+4. higher-order `Pi`/application clauses and higher-order generalisation.
 
 The reverse instance remains a regression test: the action tree, the
 generalisation certificate, the fold certificate, and the final typed relation

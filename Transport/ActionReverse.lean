@@ -67,4 +67,23 @@ theorem reverseDerivation_sound {α : Type u} (xs a : List α) :
       ⟨xs, a⟩ ⟨.rev, xs, a⟩ :=
   Transport.Action.Derivation.sound (reverseDerivation xs a)
 
+def reverseGenCert {α : Type u} (s : SourceConfig α) :
+    Transport.Action.GenCert (reverseSource α) (reverseResidual α) (List α) where
+  source := fun a => ⟨s.xs, a⟩
+  schema := fun a => ⟨.rev, s.xs, a⟩
+  sound := fun a n => reverseBisim s.xs a n
+
+def reverseGeneralised {α : Type u} (s : SourceConfig α) :
+    Transport.Action.Derivation (reverseSource α) (reverseResidual α)
+      (fun r => r.xs.length) s ⟨.rev, s.xs, s.a⟩ :=
+  Transport.Action.Derivation.generalise
+    (P := reverseSource α) (Q := reverseResidual α)
+    (measure := fun r => r.xs.length)
+    s (reverseGenCert s) s.a rfl (reverseDerivation s.xs s.a)
+
+theorem reverseGeneralised_sound {α : Type u} (s : SourceConfig α) :
+    ∀ n, Transport.Action.Bisim (reverseSource α) (reverseResidual α) n
+      s ⟨.rev, s.xs, s.a⟩ :=
+  Transport.Action.Derivation.sound (reverseGeneralised s)
+
 end Transport.ActionReverse

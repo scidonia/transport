@@ -37,9 +37,16 @@ structure FoldCert {Result : Type u} (P Q : Process Result)
   bisim : ∀ n, Bisim P Q n p q
   guarded : measure q' < measure q
 
+/-- A proof-carrying generalisation: a source family and a residual schema,
+related for every parameter. -/
+structure GenCert {Result : Type u} (P Q : Process Result) (Params : Type u) where
+  source : Params → P.Config
+  schema : Params → Q.Config
+  sound : ∀ σ, ∀ n, Bisim P Q n (source σ) (schema σ)
+
 /-- A derivation tree of actions. -/
 inductive Derivation {Result : Type u} (P Q : Process Result)
-    (measure : Q.Config → Nat) : P.Config → Q.Config → Type u
+    (measure : Q.Config → Nat) : P.Config → Q.Config → Type (u + 1)
   | halt (p : P.Config) (q : Q.Config)
       (hp : P.step p = none) (hq : Q.step q = none) (hobs : P.obs p = Q.obs q) :
       Derivation P Q measure p q
@@ -49,6 +56,11 @@ inductive Derivation {Result : Type u} (P Q : Process Result)
       (cert : FoldCert P Q measure p q)
       (rest : Derivation P Q measure cert.p' cert.q') :
       Derivation P Q measure p q
+  | generalise (p : P.Config) {Params : Type u}
+      (g : GenCert P Q Params) (σ : Params)
+      (hsource : g.source σ = p)
+      (rest : Derivation P Q measure p (g.schema σ)) :
+      Derivation P Q measure p (g.schema σ)
 
 namespace Derivation
 
@@ -63,6 +75,10 @@ theorem sound {Result : Type u} {P Q : Process Result} {measure : Q.Config → N
       | succ n => simp [Bisim, hp, hq, hobs]
   | cert p q h => exact h
   | fold p q cert rest ih => exact cert.bisim
+  | generalise p g σ hsource rest ih =>
+      intro n
+      rw [← hsource]
+      exact g.sound σ n
 
 end Derivation
 
