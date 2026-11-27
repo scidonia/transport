@@ -67,4 +67,95 @@ theorem FiberDerivation.sound (F : FiberRel)
     ∀ n, FiberBisim F P Q i i' n p q :=
   DerivationRel.sound d
 
+
+/-- A type-valued Pi certificate at a fibered action: a dependent family of
+fiber derivations over the index relation. -/
+def FiberPiCert (F : FiberRel)
+    (indexRel : F.Index → F.Index → Prop)
+    (P : (i : F.Index) → Process (F.Source i))
+    (Q : (i : F.Index) → Process (F.Residual i))
+    (measure : (i : F.Index) → (Q i).Config → Nat)
+    (f : (i : F.Index) → (P i).Config)
+    (f' : (i : F.Index) → (Q i).Config) : Type (u + 1) :=
+  ∀ i i' (_ : indexRel i i'),
+    FiberDerivation F P Q measure i i' (f i) (f' i')
+
+/-- Soundness of a fibered Pi certificate: every fiber is bisimilar. -/
+theorem FiberPiCert.sound (F : FiberRel)
+    (indexRel : F.Index → F.Index → Prop)
+    (P : (i : F.Index) → Process (F.Source i))
+    (Q : (i : F.Index) → Process (F.Residual i))
+    (measure : (i : F.Index) → (Q i).Config → Nat)
+    (f : (i : F.Index) → (P i).Config)
+    (f' : (i : F.Index) → (Q i).Config)
+    (h : FiberPiCert F indexRel P Q measure f f') :
+    ∀ i i' (_ : indexRel i i') n, FiberBisim F P Q i i' n (f i) (f' i') := by
+  intro i i' hi n
+  exact FiberDerivation.sound F P Q measure i i' (f i) (f' i') (h i i' hi) n
+
+/-- A fold step at one fiber. -/
+def FiberDerivation.fold (F : FiberRel)
+    (P : (i : F.Index) → Process (F.Source i))
+    (Q : (i : F.Index) → Process (F.Residual i))
+    (measure : (i : F.Index) → (Q i).Config → Nat)
+    (i i' : F.Index) (p : (P i).Config) (q : (Q i').Config)
+    (cert : FiberFoldCert F P Q measure i i' p q)
+    (rest : FiberDerivation F P Q measure i i' cert.p' cert.q') :
+    FiberDerivation F P Q measure i i' p q :=
+  DerivationRel.fold p q cert rest
+
+/-- A generalisation step at one fiber. -/
+def FiberDerivation.generalise (F : FiberRel)
+    (P : (i : F.Index) → Process (F.Source i))
+    (Q : (i : F.Index) → Process (F.Residual i))
+    (measure : (i : F.Index) → (Q i).Config → Nat)
+    (i i' : F.Index) (p : (P i).Config) {Params : Type u}
+    (g : FiberGenCert F P Q i i' Params) (σ : Params)
+    (hsource : g.source σ = p)
+    (rest : FiberDerivation F P Q measure i i' p (g.schema σ)) :
+    FiberDerivation F P Q measure i i' p (g.schema σ) :=
+  DerivationRel.generalise p g σ hsource rest
+
+/-- A halted process with no observation. -/
+def haltNat : Process Nat where
+  Config := Unit
+  step := fun _ => none
+  obs := fun _ => none
+
+theorem bisimHalt (n : Nat) :
+    BisimRel (fun _ _ => True) haltNat haltNat n () () := by
+  cases n with
+  | zero => trivial
+  | succ n => simp [BisimRel, haltNat]
+
+/-- The trivial one-point fiber. -/
+def trivialFiber : FiberRel where
+  Index := Unit
+  Source := fun _ => Nat
+  Residual := fun _ => Nat
+  rel := fun _ _ _ _ => True
+
+def trivialP (i : trivialFiber.Index) : Process (trivialFiber.Source i) := haltNat
+def trivialQ (i : trivialFiber.Index) : Process (trivialFiber.Residual i) := haltNat
+def trivialMeasure (i : trivialFiber.Index) : (trivialQ i).Config → Nat := fun _ => 0
+
+/-- The concrete fibered Pi certificate for the identity family on the trivial
+fiber. -/
+def trivialPi :
+    FiberPiCert trivialFiber (fun _ _ => True) trivialP trivialQ trivialMeasure
+      (fun _ => ()) (fun _ => ()) := by
+  intro i i' _
+  cases i
+  cases i'
+  exact DerivationRel.cert (rel := fun _ _ => True)
+    (P := trivialP ()) (Q := trivialQ ())
+    (measure := trivialMeasure ()) () ()
+    (by
+      change ∀ n, BisimRel (fun _ _ => True) haltNat haltNat n () ()
+      exact bisimHalt)
+
+example : ∀ n, FiberBisim trivialFiber trivialP trivialQ () () n () () :=
+  FiberPiCert.sound trivialFiber (fun _ _ => True) trivialP trivialQ trivialMeasure
+    (fun _ => ()) (fun _ => ()) trivialPi () () trivial
+
 end Transport.FiberAction

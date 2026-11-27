@@ -87,8 +87,12 @@ This is the simplest genuinely dependent Pi certificate.
   a family over the argument relation.
 - `Transport/FiberAction.lean` lifts the action calculus to a `FiberRel` family:
   `FiberBisim`, `FiberFoldCert`, `FiberGenCert`, and `FiberDerivation` are the
-  per-index instances of the existing certificates.  It is not yet connected
-  to the step-indexed object relation or to a Pi fold/generalisation.
+  per-index instances of the existing certificates.
+- `FiberPiCert` is the type-valued Pi certificate: a dependent family of fiber
+  derivations over an index relation.  `FiberPiCert.sound` gives a fiber
+  bisimulation at every index pair; `trivialPi` is the concrete one-point
+  instance.  It is not yet connected to the step-indexed object relation and has
+  no nontrivial fold/generalisation family.
 - There is no object-language relation over the **core** `Tm` and no fiberwise
   transport theorem.
 - There is a semantic `PiCert` over arbitrary index types, families, and
