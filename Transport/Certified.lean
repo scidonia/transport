@@ -212,6 +212,10 @@ inductive RDerivation {α : Type u} : SourceConfig α → ResidualConfig α → 
   | halt (s : SourceConfig α) (r : ResidualConfig α)
       (hxs : s.xs = []) (rxs : r.xs = []) (ha : s.a = r.a) :
       RDerivation s r
+  | cert (s : SourceConfig α) (r : ResidualConfig α)
+      (h : ∀ n, SBisim n s r) : RDerivation s r
+  | generalise (s : SourceConfig α) (g : GenCert s) :
+      RDerivation s (g.schema s.a)
   | fold (s : SourceConfig α) (r : ResidualConfig α)
       (cert : ResidualFoldCert s r)
       (rest : RDerivation cert.source_unfold cert.unfold) :
@@ -235,10 +239,24 @@ theorem sound {α : Type u} {s : SourceConfig α} {r : ResidualConfig α}
           rcases rxs with rfl
           rcases ha with rfl
           simp [SBisim, sstep, rstep, sObs, rObs]
+  | cert s r h => exact h
+  | generalise s g =>
+      intro n
+      exact g.sound s.a n
   | fold s r cert rest ih =>
       exact cert.bisim
 
 end RDerivation
+
+/-- A generalisation action: the certificate is the GenCert at its instance. -/
+def generaliseDerivation {α : Type u} (s : SourceConfig α) (g : GenCert s) :
+    RDerivation s (g.schema s.a) :=
+  .generalise s g
+
+/-- A one-action transform using the algorithmic accumulator generalisation. -/
+def reverseGeneralised {α : Type u} (s : SourceConfig α) :
+    RDerivation s ⟨.rev, s.xs, s.a⟩ :=
+  generaliseDerivation s (algorithmicGen s)
 
 /-- The reverse supercompiler: fold on each cons, residualise on nil. -/
 def reverseDerivation {α : Type u} : (xs : List α) → (a : List α) →
@@ -253,5 +271,32 @@ def reverseDerivation {α : Type u} : (xs : List α) → (a : List α) →
 theorem reverseDerivation_sound {α : Type u} (xs a : List α) :
     ∀ n, SBisim n ⟨xs, a⟩ ⟨.rev, xs, a⟩ :=
   RDerivation.sound (reverseDerivation xs a)
+
+
+/-! ## Stage 4, base case: a heterogeneous logical relation for lists -/
+
+inductive ListRel {α β : Type u} (R : α → β → Prop) :
+    List α → List β → Prop
+  | nil : ListRel R [] []
+  | cons {a b : _} {xs ys : _} :
+      R a b → ListRel R xs ys → ListRel R (a :: xs) (b :: ys)
+
+theorem ListRel.eq_refl {α : Type u} (xs : List α) : ListRel Eq xs xs := by
+  induction xs with
+  | nil => exact .nil
+  | cons x xs ih => exact .cons rfl ih
+
+/-- The source reverse is related to its result at the list logical relation. -/
+theorem reverse_LR {α : Type u} (xs : List α) :
+    ListRel Eq (revAcc xs []) xs.reverse := by
+  rw [revAcc_reverse]
+  exact ListRel.eq_refl _
+
+/-- The residual run is related to the source at the same list relation. -/
+theorem reverse_residual_LR {α : Type u} (xs : List α) :
+    ListRel Eq (revAcc xs [])
+      (Option.getD (rrun (xs.length + 1) ⟨.rev, xs, []⟩) []) := by
+  rw [residual_run]
+  simpa [Option.getD] using reverse_LR (α := α) xs
 
 end Transport.Certified

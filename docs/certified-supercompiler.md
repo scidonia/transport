@@ -223,24 +223,33 @@ proof is the step-indexed bisimulation `R_bisim` for every accumulator.
 An oracular generaliser must return the same structure, including the proof.
 A general anti-unification algorithm and a non-accumulator schema remain open.
 
-### Stage 3: a simple supercompiler — checked for reverse
+### Stage 3: actions, not a fixed algorithm — checked
 
-`Transport/Certified.lean` now has:
+`Transport/Certified.lean` now has `RDerivation`, a free tree of
+proof-carrying actions:
 
-- `RDerivation`: fold and halt/residualise steps, each carrying its certificate;
-- `RDerivation.sound`: every derivation carries the step-indexed bisimulation;
-- `reverseDerivation`: fold on each cons, residualise on nil;
-- `reverseDerivation_sound`: the top-level source/residual certificate.
+- `halt` / residualise;
+- `cert`, a leaf carrying a step-indexed bisimulation;
+- `generalise`, carrying a `GenCert`;
+- `fold`, carrying a `ResidualFoldCert` and a continuation.
 
-This is a concrete first-order loop for reverse, not yet a generic driving /
-generalisation search.  The accumulator generalisation is `GenCert`; the fold is
+`reverseDerivation` (fold on each cons, residualise on nil) and
+`reverseGeneralised` (one generalisation action) are two terms in this action
+calculus.  There is no required deterministic supercompiler loop; an algorithm
+or an oracle may choose an action tree, and `RDerivation.sound` checks the
+carried certificates.
+
+The accumulator generalisation is `GenCert`; the fold is
 `ResidualFoldCert`; the residual program is the `rev` label.
 
 ### Stage 4: the typed relation
 
-Replace the denotational base relation with the heterogeneous typed `LR` and
-the step-indexed/coinductive extension.  Then the certificate is the typed
-logical relation, and the final theorem is transport + contextual equivalence.
+`Transport/Certified.lean` now contains the first base case: a heterogeneous
+`ListRel` between lists, the reverse source/result certificate `reverse_LR`,
+and the residual/source certificate `reverse_residual_LR`.  This is still a
+base-type relation, not the full dependent `LR`; the next step is the
+type-directed relation for `Pi`, identity, and inductive families, with
+transport.
 
 ## 8. Status
 

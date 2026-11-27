@@ -46,6 +46,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | independent residual label and source/residual bisimulation | `Transport.Certified.ResidualFoldCert`, `R_bisim`, `residual_run` |
 | accumulator generalisation certificate | `Transport.Certified.GenCert`, `algorithmicGen`, `genCert_instance` |
 | certified reverse supercompiler loop | `Transport.Certified.RDerivation`, `reverseDerivation`, `reverseDerivation_sound` |
+| composable transform actions | `Transport.Certified.RDerivation.cert`, `generalise`, `fold`, `halt` |
+| base heterogeneous list logical relation | `Transport.Certified.ListRel`, `reverse_residual_LR` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
