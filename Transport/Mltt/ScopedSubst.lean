@@ -199,6 +199,64 @@ theorem wellScoped_subst {d d' : Nat} {σ : Nat → Tm} {t : Tm}
     WellScoped d' (Tm.subst σ t) :=
   wellScoped_subst_aux t d d' σ ht hσ
 
+/-- Well-scopedness is monotone in the depth bound. -/
+theorem WellScoped.mono {d d' : Nat} (hle : d ≤ d') {t : Tm} (h : WellScoped d t) :
+    WellScoped d' t := by
+  let P : Tm → Prop := fun t =>
+    ∀ (d d' : Nat), d ≤ d' → WellScoped d t → WellScoped d' t
+  have hP : ∀ t, P t := by
+    apply tm_strong_induction
+    intro t ih d d' hle h
+    cases t with
+    | var x =>
+        cases h with
+        | var hx => exact WellScoped.var (by omega)
+    | sort i => exact WellScoped.sort
+    | pi A B =>
+        cases h with
+        | pi hA hB =>
+            exact WellScoped.pi (ih A (size_lt_pi_left A B) d d' hle hA)
+              (ih B (size_lt_pi_right A B) (d + 1) (d' + 1) (by omega) hB)
+    | lam A b =>
+        cases h with
+        | lam hA hb =>
+            exact WellScoped.lam (ih A (size_lt_lam_left A b) d d' hle hA)
+              (ih b (size_lt_lam_right A b) (d + 1) (d' + 1) (by omega) hb)
+    | app f u =>
+        cases h with
+        | app hf hu =>
+            exact WellScoped.app (ih f (size_lt_app_left f u) d d' hle hf)
+              (ih u (size_lt_app_right f u) d d' hle hu)
+    | fix A b =>
+        cases h with
+        | fix hA hb =>
+            exact WellScoped.fix (ih A (size_lt_fix_left A b) d d' hle hA)
+              (ih b (size_lt_fix_right A b) (d + 1) (d' + 1) (by omega) hb)
+    | ind I args =>
+        cases h with
+        | ind hargs =>
+            exact WellScoped.ind (by
+              intro a ha
+              exact ih a (size_lt_ind_mem ha) d d' hle (hargs a ha))
+    | roll I c args =>
+        cases h with
+        | roll hargs =>
+            exact WellScoped.roll (by
+              intro a ha
+              exact ih a (size_lt_roll_mem ha) d d' hle (hargs a ha))
+    | case I n scrut C brs =>
+        cases h with
+        | case hscrut hC hbrs =>
+            exact WellScoped.case
+              (ih scrut (size_lt_case_scrut I n scrut C brs) d d' hle hscrut)
+              (ih C (size_lt_case_motive I n scrut C brs) (d + n + 1) (d' + n + 1)
+                (by omega) hC)
+              (by
+                intro b hb
+                exact ih b (size_lt_case_mem hb) d d' hle (hbrs b hb))
+  exact hP t d d' hle h
+
+/-- A typed context morphism. -/
 def CtxMap (env : Env) (σ : Nat → Tm) (Γ Δ : Ctx) : Prop :=
   ∀ x A, ctxLookup Γ x = some A → HasType env Δ (σ x) (Tm.subst σ A)
 

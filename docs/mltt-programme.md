@@ -118,6 +118,10 @@ until these two conventions agree.
 The new relation `HasTypeDep` is the likely target; the old `HasType.roll` proof
 and the Eq-specific weakening must then be revalidated against it.
 
+The first general step is in place: `WellScoped.mono`, `sigTyListFull`,
+`rollIndexArgsFull`, and their rename lemmas under `WellFormedSigFull`
+(`Transport/Mltt/SigIndexFull.lean`).  General weakening is next.
+
 
 The order matters because each layer consumes the previous one.
 
