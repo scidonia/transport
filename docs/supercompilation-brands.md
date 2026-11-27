@@ -126,3 +126,6 @@ must still compose.
 
 The certificate architecture should not need to change for those brands; the
 instantiations and the selection policy should.
+
+
+Higher-order closure representation and Lean positivity: [higher-order-model.md](higher-order-model.md).
