@@ -42,6 +42,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | result-index substitution in dependent constructors | `Transport.Mltt.Dependent.HasTypeDep.rollDep` |
 | dependent case with a dependent motive | `Transport.Mltt.Dependent.Motive.unit_caseDep_motive` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
+| positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
 | well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |

@@ -203,4 +203,57 @@ theorem finDep_wellFormed : WellFormedSigFull FinDep_sig := by
         subst t
         exact WellScoped.var (by simp [FinDep_sig])
 
+
+/-! ### Positivity gate for the full-argument signatures -/
+
+@[simp] theorem occursIndFuel_var (fuel I x : Nat) :
+    occursIndFuel fuel I (.var x) = false := by
+  cases fuel <;> rfl
+
+@[simp] theorem occursIndFuel_sort (fuel I i : Nat) :
+    occursIndFuel fuel I (.sort i) = false := by
+  cases fuel <;> rfl
+
+@[simp] theorem occursIndFuel_roll_nil (fuel I c : Nat) :
+    occursIndFuel fuel I (.roll 0 c []) = false := by
+  cases fuel <;> simp [occursIndFuel]
+
+@[simp] theorem occursIndFuel_roll_var (fuel I c x : Nat) :
+    occursIndFuel fuel I (.roll 0 c [.var x]) = false := by
+  cases fuel <;> simp [occursIndFuel]
+
+@[simp] theorem occursIndFuel_ind_zero_one (fuel : Nat) :
+    occursIndFuel fuel 1 (.ind 0 []) = false := by
+  cases fuel <;> simp [occursIndFuel]
+
+@[simp] theorem occursIndFuel_ind_zero_two (fuel : Nat) :
+    occursIndFuel fuel 2 (.ind 0 []) = false := by
+  cases fuel <;> simp [occursIndFuel]
+
+theorem natDep_strict : strictlyPositive 0 NatDep_sig = true := by
+  simp [strictlyPositive, NatDep_sig]
+
+theorem eqDep_strict : strictlyPositive 0 EqDep_sig = true := by
+  simp [strictlyPositive, EqDep_sig, occursInd, Tm.size]
+
+theorem vecDep_strict : strictlyPositive 1 VecDep_sig = true := by
+  simp [strictlyPositive, VecDep_sig, occursInd, Tm.size]
+
+theorem finDep_strict : strictlyPositive 2 FinDep_sig = true := by
+  simp [strictlyPositive, FinDep_sig, occursInd, Tm.size]
+
+theorem natDep_gate : lookupIndStrict [NatDep_sig] 0 = some NatDep_sig := by
+  simp [lookupIndStrict, lookupInd, lookup, natDep_strict]
+
+theorem vecDep_gate :
+    lookupIndStrict [NatDep_sig, VecDep_sig] 1 = some VecDep_sig := by
+  simp [lookupIndStrict, lookupInd, lookup, vecDep_strict]
+
+theorem finDep_gate :
+    lookupIndStrict [NatDep_sig, VecDep_sig, FinDep_sig] 2 = some FinDep_sig := by
+  simp [lookupIndStrict, lookupInd, lookup, finDep_strict]
+
+theorem eqDep_gate : lookupIndStrict [EqDep_sig] 0 = some EqDep_sig := by
+  simp [lookupIndStrict, lookupInd, lookup, eqDep_strict]
+
 end Transport.Mltt.Conventions

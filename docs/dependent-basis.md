@@ -182,8 +182,10 @@ context; B4 follows once that relation is related back to the old judgment.
 * `NatDep_sig`, `VecDep_sig`, `FinDep_sig`, and `EqDep_sig` are the first
   signatures in that convention;
 * `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed`, and
-  `eqDep_wellFormed` are checked; the positivity gate and a typed constructor
-  example are the next step;
+  `eqDep_wellFormed` are checked;
+* `strictlyPositive` is checked for `NatDep`, `VecDep`, `FinDep`, and
+  `EqDep`, with the corresponding `lookupIndStrict` gates;
+* a typed constructor through `rollDep` is the next step;
 * the original `Eq_sig` remains for the old `HasType` proofs.
 
 The convention is: data parameters and indices are telescopes in binding
