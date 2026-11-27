@@ -195,21 +195,23 @@ This is a `GenCert`-style proof (generalisation over `a`) and a recursive
 worker, but the "fold" is not a distinct label/letrec edge and the relation is
 denotational equality, not a step-indexed `LR`.
 
-### Stage 1: a labeled process calculus — first instance checked
+### Stage 1: a labeled process calculus — checked
 
 `Transport/Certified.lean` now has:
 
-- a residual label `rev`;
-- a labelled step relation and a fuel-indexed `run`;
-- a fuel-indexed bisimulation `Bisim n c` agreeing with `revAcc`;
-- `FoldCert` with the label step, unfolding, bisimulation, and guarded decrease;
-- `reverseFold` for a nonempty reverse configuration;
-- `run_sound` and `residual_sound`.
+- an independent source configuration and residual configuration;
+- separate source and residual step relations;
+- a step-indexed bisimulation `SBisim n s r` between them;
+- `R_bisim`, proving the invariant for all fuel;
+- `ResidualFoldCert` with the residual step, unfolding, bisimulation, and
+  guarded decrease;
+- `residualFold` for a nonempty reverse configuration;
+- `rrun_sound` and `residual_run`.
 
-This is a real label and a proof-carrying fold, but the label's semantics is the
-same worker: the next refinement is a residual language where the label is an
-independent recursive definition and `Bisim` is a step-indexed relation between
-two configurations, not just the label against the worker.
+The source/residual bisimulation is not defined by comparing `run` with
+`revAcc`; it is a step-indexed relation between two configuration types and two
+step relations.  The next stage is `GenCert` for the accumulator
+generalisation.
 
 ### Stage 2: `GenCert`
 

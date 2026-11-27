@@ -86,4 +86,94 @@ theorem residual_sound {α : Type u} (xs : List α) :
     run (xs.length + 1) ⟨xs, []⟩ = some xs.reverse := by
   rw [run_sound, revAcc_reverse]
 
+
+/-! ## An independent residual label
+
+The residual label has its own configurations and step relation.  The source
+worker and the residual label are related by a step-indexed bisimulation.
+-/
+
+structure SourceConfig (α : Type u) where
+  xs : List α
+  a : List α
+
+structure ResidualConfig (α : Type u) where
+  label : Label
+  xs : List α
+  a : List α
+
+def sstep {α : Type u} : SourceConfig α → Option (SourceConfig α)
+  | ⟨[], _⟩ => none
+  | ⟨x :: xs, a⟩ => some ⟨xs, x :: a⟩
+
+def rstep {α : Type u} : ResidualConfig α → Option (ResidualConfig α)
+  | ⟨.rev, [], _⟩ => none
+  | ⟨.rev, x :: xs, a⟩ => some ⟨.rev, xs, x :: a⟩
+
+def sObs {α : Type u} : SourceConfig α → Option (List α)
+  | ⟨[], a⟩ => some a
+  | _ => none
+
+def rObs {α : Type u} : ResidualConfig α → Option (List α)
+  | ⟨.rev, [], a⟩ => some a
+  | _ => none
+
+def R {α : Type u} (s : SourceConfig α) (r : ResidualConfig α) : Prop :=
+  s.xs = r.xs ∧ s.a = r.a
+
+def SBisim {α : Type u} : Nat → SourceConfig α → ResidualConfig α → Prop
+  | 0, _, _ => True
+  | n + 1, s, r =>
+      match sstep s, rstep r with
+      | none, none => sObs s = rObs r
+      | some s', some r' => SBisim n s' r'
+      | _, _ => False
+
+theorem R_bisim {α : Type u} {s : SourceConfig α} {r : ResidualConfig α}
+    (h : R s r) : ∀ n, SBisim n s r := by
+  intro n
+  induction n generalizing s r with
+  | zero => trivial
+  | succ n ih =>
+      rcases s with ⟨sxs, sa⟩
+      rcases r with ⟨rlabel, rxs, ra⟩
+      cases rlabel
+      rcases h with ⟨hxs, ha⟩
+      rcases hxs with rfl
+      rcases ha with rfl
+      cases sxs with
+      | nil => simp [SBisim, sstep, rstep, sObs, rObs]
+      | cons x xs =>
+          simp [SBisim, sstep, rstep]
+          exact ih ⟨rfl, rfl⟩
+
+def rrun {α : Type u} : Nat → ResidualConfig α → Option (List α)
+  | 0, _ => none
+  | _ + 1, ⟨.rev, [], a⟩ => some a
+  | n + 1, ⟨.rev, x :: xs, a⟩ => rrun n ⟨.rev, xs, x :: a⟩
+
+theorem rrun_sound {α : Type u} (xs a : List α) :
+    rrun (xs.length + 1) ⟨.rev, xs, a⟩ = some (revAcc xs a) := by
+  induction xs generalizing a with
+  | nil => simp [rrun, revAcc_nil]
+  | cons x xs ih => simp [rrun, ih, revAcc_cons]
+
+theorem residual_run {α : Type u} (xs : List α) :
+    rrun (xs.length + 1) ⟨.rev, xs, []⟩ = some xs.reverse := by
+  rw [rrun_sound, revAcc_reverse]
+
+structure ResidualFoldCert {α : Type u} (s : SourceConfig α)
+    (r : ResidualConfig α) where
+  unfold : ResidualConfig α
+  step_eq : rstep r = some unfold
+  bisim : ∀ n, SBisim n s r
+  guarded : unfold.xs.length < r.xs.length
+
+def residualFold {α : Type u} (x : α) (xs a : List α) :
+    ResidualFoldCert ⟨x :: xs, a⟩ ⟨.rev, x :: xs, a⟩ where
+  unfold := ⟨.rev, xs, x :: a⟩
+  step_eq := rfl
+  bisim := R_bisim ⟨rfl, rfl⟩
+  guarded := by simp
+
 end Transport.Certified
