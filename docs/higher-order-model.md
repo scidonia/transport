@@ -95,3 +95,18 @@ identity application.
 This gives the higher-order process language a real step relation.  The next
 step is a typed term process and higher-order `FoldCertRel`/`GenCertRel`
 instances.
+
+
+## Typed term certificate
+
+`Transport/Closure.lean` now includes:
+
+- `numeral`;
+- `step_numeral` and `eval_numeral`;
+- `LRAll_nat`;
+- `termBisimNat`;
+- `termCertNat` and `termCertNat_sound`.
+
+This is a typed **term** process at `LRAll .nat`: the small-step term process and
+its proof-carrying `DerivationRel`.  It is a base certificate, not yet a
+function-space or recursive-label certificate.

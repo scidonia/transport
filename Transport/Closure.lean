@@ -155,4 +155,55 @@ example : Transport.ActionRel.DerivationRel (LRAll .nat)
     (valueProcess .nat) (valueProcess .nat) (fun _ => 0) (.nat 0) (.nat 0) :=
   valueCert .nat (.nat 0) nat_zero_LRAll
 
+
+
+/-- A closed numeral term. -/
+def numeral : Nat → Tm
+  | 0 => .zero
+  | n + 1 => .succ (numeral n)
+
+theorem step_numeral (n : Nat) : step (numeral n) = none := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [numeral, step, ih]
+
+theorem eval_numeral : ∀ n, eval (n + 1) (numeral n) [] = some (.nat n)
+  | 0 => rfl
+  | n + 1 => by
+      simp [numeral, eval, eval_numeral n]
+
+theorem LRAll_nat (n : Nat) : LRAll .nat (.nat n) (.nat n) := by
+  intro k
+  cases k with
+  | zero => trivial
+  | succ k => simp [LR]
+
+theorem termBisimNat (n : Nat) :
+    ∀ k, Transport.ActionRel.BisimRel (LRAll .nat)
+      (termProcess (n + 1)) (termProcess (n + 1)) k (numeral n) (numeral n) := by
+  intro k
+  cases k with
+  | zero => trivial
+  | succ k =>
+      simp [Transport.ActionRel.BisimRel, termProcess, step_numeral, eval_numeral]
+      exact LRAll_nat n
+
+def termCertNat (n : Nat) :
+    Transport.ActionRel.DerivationRel (LRAll .nat)
+      (termProcess (n + 1)) (termProcess (n + 1)) (fun _ => 0)
+      (numeral n) (numeral n) :=
+  Transport.ActionRel.DerivationRel.cert
+    (rel := LRAll .nat) (P := termProcess (n + 1)) (Q := termProcess (n + 1))
+    (measure := fun _ => 0) (numeral n) (numeral n) (termBisimNat n)
+
+theorem termCertNat_sound (n : Nat) :
+    ∀ k, Transport.ActionRel.BisimRel (LRAll .nat)
+      (termProcess (n + 1)) (termProcess (n + 1)) k (numeral n) (numeral n) :=
+  Transport.ActionRel.DerivationRel.sound (termCertNat n)
+
+example : Transport.ActionRel.DerivationRel (LRAll .nat)
+    (termProcess 3) (termProcess 3) (fun _ => 0) (numeral 2) (numeral 2) :=
+  termCertNat 2
+
+
 end Transport.Closure

@@ -55,6 +55,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | positive closure language and higher-order LR | `Transport.Closure.eval`, `apply`, `LR` |
 | closure value process/action instance | `Transport.Closure.LRAll`, `valueCert`, `nat_zero_LRAll` |
 | closure substitution and small-step process | `Transport.Closure.subst0`, `step`, `termProcess` |
+| typed numeral term certificate at LRAll | `Transport.Closure.termCertNat`, `termCertNat_sound` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
