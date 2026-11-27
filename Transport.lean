@@ -30,3 +30,4 @@ import Transport.FiberAction
 import Transport.GeneralTransport
 import Transport.SubstitutionCoherence
 import Transport.Mltt.ScopedSubst
+import Transport.Mltt.TypingWellFormed
