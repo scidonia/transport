@@ -52,3 +52,18 @@ The higher-order layer should be built as:
 The existing `ActionRel`/`ActionReverseRel` typed relation and the certified
 generalisation+fold demo are unaffected; they remain the first-order/base
 regression.
+
+
+## Implemented base
+
+`Transport/Closure.lean` now has the positive representation:
+
+- `Ty` (`nat`, `arr`);
+- `Tm` and `Val` (`nat`, `closure Tm (List Val)`);
+- fuel-indexed `eval` and `apply`;
+- step-indexed `LR` with the `arr` clause;
+- concrete base tests at `nat` and a lambda closure.
+
+The next step is a `Process`/action instance at `LR` and a certified
+higher-order transformation; the first-order certified action/demo remains the
+regression.

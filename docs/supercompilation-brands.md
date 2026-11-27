@@ -100,7 +100,9 @@ Still specific to reverse/`Certified`:
 A process-level typed relation is now in `Transport/ActionRel.lean`:
 `BisimRel` is parameterised by a heterogeneous result relation and carries
 `FoldCertRel`, `GenCertRel`, and `DerivationRel`; `ActionReverseRel`
-instantiates it at `ListRel Eq`.
+instantiates it at `ListRel Eq`.  The higher-order base is in
+`Transport/Closure.lean`: closures, evaluation/application, and a step-indexed
+`LR` with a function-space clause.
 
 To support other brands, continue with:
 

@@ -22,3 +22,4 @@ import Transport.Action
 import Transport.ActionReverse
 import Transport.ActionRel
 import Transport.ActionReverseRel
+import Transport.Closure
