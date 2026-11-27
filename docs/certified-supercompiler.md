@@ -256,4 +256,6 @@ transport.
 This note is a design and a build order.  The repository currently has the
 Stage 0 worker, but not the labeled process calculus, `GenCert`/`FoldCert`, a
 step-indexed bisimulation, a typed `LR`, or a general supercompiler.  The T1--T10
-obligations in `docs/equivalence.md` remain the acceptance criteria.
+obligations in `docs/equivalence.md` remain the acceptance criteria.  The
+brand-parameterisation (HOSC, SCE, distillation, positive/negative,
+multi-result) is in [docs/supercompilation-brands.md](supercompilation-brands.md).

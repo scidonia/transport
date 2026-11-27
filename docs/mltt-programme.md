@@ -68,6 +68,10 @@ tests for the new core, not a parallel theory.
 | transport | theorem schema; definitional and beta instances | dependent instance; supercompiler translation |
 | supercompiler | first-order reverse derivation | driving/generalisation/folding for the core |
 
+The action/certificate layer is intended to be brand-parameterised; the variants
+and what each changes are in
+[docs/supercompilation-brands.md](supercompilation-brands.md).
+
 ## 4. Metatheory targets
 
 The order matters because each layer consumes the previous one.
