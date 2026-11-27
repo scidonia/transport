@@ -134,8 +134,17 @@ two remaining dependencies:
 
 Until those are settled, a full `hasTypeDep_weaken` theorem cannot be stated
 without a hypothesis standing in for one of them.  The scoped/substitution and
-signature-index layers are complete; the next actual proofs are the two
-context/weakening lemmas above, not more substitution algebra.
+signature-index layers are complete.
+
+The case-motive blocker is structural, not a missing algebra lemma.  Weakening
+adds a fresh binder at index `0` (`B :: Γ`), but `caseMotiveCtx` builds the
+index and scrutinee binders by **prepending** to `Γ`.  The weakened motive
+context needs the fresh binder at the **old** end of that telescope, below the
+index and scrutinee binders.  The list representation cannot express that
+insertion; a telescope context with an explicit old-end extension is required.
+
+That is the M4 context redesign.  Adding more `substMany` lemmas does not
+remove it.
 
 
 The order matters because each layer consumes the previous one.
