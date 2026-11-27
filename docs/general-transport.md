@@ -105,7 +105,13 @@ transport (ctxExtend h) (tyFormer k) (t[σ])
 ```
 
 The general composition theorem does not prove these for an arbitrary
-supercompiler.  In the current development:
+supercompiler.  The substitution square is formalised separately: a
+`TransportData.Subst` supplies `ctxSubst`, `tySubst`, and `transport_subst`,
+and `transport_subst_typing` reads a substituted residual term back at the
+substituted source context and type.  The equation is an explicit coherence
+field, not a theorem for an arbitrary supercompiler.
+
+In the current development:
 
 - `TransportData.identity` is the definitional instance;
 - `Transport.BetaInstance` is a non-identity instance on the simple fragment;
