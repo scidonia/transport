@@ -554,3 +554,46 @@ The supercompiler is **type-directed**:
 The untyped pullback is a useful **soundness/approximation** layer. It does not
 replace the typed transformation, the typed lifting theorem, or the typed
 logical relation.
+
+## 13. What would count as a correctness proof
+
+The typed-section/logical-relation architecture is a proof **strategy**. It is
+sufficient only when the following are theorems for the actual source and
+residual calculi.
+
+| obligation | statement |
+| --- | --- |
+| T1 typed transformation | `sc_T` is total on typed source terms and returns a typed residual term |
+| T2 erasure commutation | `erase ∘ sc_T = sc_U ∘ erase` |
+| T3 process bisimulation | the erased source and residual configurations are bisimilar; the process graph has the required coverage |
+| T4 cross-language LR | a heterogeneous typed logical relation `LR_{A~A'}` with clauses for every type former and stability under substitution/conversion |
+| T5 transformation in the LR | `LR_{A~A'}(sc_T(t), t)` for every typed source `t` |
+| T6 adequacy/CIU | `LR` implies the intended typed contextual equivalence (heterogeneous, or same-type after transport) |
+| T7 transport coherence | `e : A' ≃ A`, `transport e` is well-typed, and the `uaβ`/coherence laws hold |
+| T8 contextual congruence | the relation is closed under well-typed contexts and substitutions; open terms are covered |
+| T9 observation | termination, divergence, normal forms, and the observation relation are specified; the relation is sound for them |
+| T10 supercompiler termination/coverage | driving/generalisation/folding/residualisation is total on the accepted fragment; no unchecked divergence or missing residual |
+
+The untyped pullback supplies at most a **sound approximation** to T3/T4; it
+does not supply T1, T6, T8, T9, or T10. The typed section supplies the graph of
+`sc_T`; it does not by itself prove T4--T6. Howe's method, if used, proves a
+congruence property for the process/bisimulation layer; it is not a substitute
+for adequacy or transport coherence.
+
+### Current status
+
+- No typed supercompiler `sc_T` is formalized; `Derivation.lean` has a
+  first-order reverse derivation, not the dependent transformation.
+- No untyped process calculus or erasure commutation is formalized.
+- No cross-language typed logical relation, fundamental theorem, or adequacy is
+  formalized.
+- No contextual equivalence, CIU, or typed Howe closure is formalized.
+- `Transport/Spec.lean` is a transport schema; `BetaInstance` is a
+  definitional beta instance; `Orbit` is graph connectivity.
+- The dependent case and uniform signatures are typing fragments; they do not
+  include conversion, subject reduction, or a compiler.
+
+Therefore the answer is: **no, the current material is not a sufficient proof of
+correctness of the transformation.** It is a sufficient *plan* only if T1--T10
+are discharged for a precisely delimited fragment, and the untyped pullback is
+not the proof.
