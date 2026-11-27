@@ -213,11 +213,15 @@ The source/residual bisimulation is not defined by comparing `run` with
 step relations.  The next stage is `GenCert` for the accumulator
 generalisation.
 
-### Stage 2: `GenCert`
+### Stage 2: `GenCert` — first instance checked
 
-Add the `GenCert` structure and an algorithmic anti-unification instance.
-For the reverse worker, generalisation over the accumulator is the first
-instance; the soundness proof is the existing universal theorem.
+`Transport/Certified.lean` now has `GenCert`, a proof-carrying generalisation of
+the reverse worker over its accumulator, plus `algorithmicGen` and
+`genCert_instance`.  The schema is the family `⟨.rev, xs, a⟩`; the soundness
+proof is the step-indexed bisimulation `R_bisim` for every accumulator.
+
+An oracular generaliser must return the same structure, including the proof.
+A general anti-unification algorithm and a non-accumulator schema remain open.
 
 ### Stage 3: a simple supercompiler
 

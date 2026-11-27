@@ -176,4 +176,29 @@ def residualFold {α : Type u} (x : α) (xs a : List α) :
   bisim := R_bisim ⟨rfl, rfl⟩
   guarded := by simp
 
+
+/-! ## Stage 2: a generalisation certificate
+
+`GenCert` generalises the source worker over the accumulator.  The schema is a
+family of residual configurations; the soundness field is the step-indexed
+bisimulation for every instance.  An algorithmic or oracular generaliser must
+produce this structure; the proof is checked.
+-/
+
+structure GenCert {α : Type u} (s : SourceConfig α) where
+  schema : List α → ResidualConfig α
+  sound : ∀ a, ∀ n, SBisim n ⟨s.xs, a⟩ (schema a)
+
+/-- The algorithmic generaliser: the accumulator is the schema parameter. -/
+def algorithmicGen {α : Type u} (s : SourceConfig α) : GenCert s where
+  schema := fun a => ⟨.rev, s.xs, a⟩
+  sound := fun a n =>
+    R_bisim (s := ⟨s.xs, a⟩) (r := ⟨.rev, s.xs, a⟩) ⟨rfl, rfl⟩ n
+
+/-- The certificate at the source instance. -/
+theorem genCert_instance {α : Type u} {s : SourceConfig α} (g : GenCert s) :
+    ∀ n, SBisim n s (g.schema s.a) := by
+  intro n
+  simpa using g.sound s.a n
+
 end Transport.Certified
