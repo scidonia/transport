@@ -47,6 +47,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | accumulator generalisation certificate | `Transport.Certified.GenCert`, `algorithmicGen`, `genCert_instance` |
 | certified reverse supercompiler loop | `Transport.Certified.RDerivation`, `reverseDerivation`, `reverseDerivation_sound` |
 | composable transform actions | `Transport.Certified.RDerivation.cert`, `generalise`, `fold`, `halt`; `reverseGeneralised` |
+| generic action interface over processes | `Transport.Action.Process`, `Bisim`, `Derivation` |
+| reverse process instance | `Transport.ActionReverse.reverseDerivation_sound` |
 | base heterogeneous list logical relation | `Transport.Certified.ListRel`, `reverse_residual_LR` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |

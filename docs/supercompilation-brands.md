@@ -80,23 +80,26 @@ fold is a negative certificate, not an unchecked optimisation.
 
 ## 4. What the current code fixes
 
-`Transport/Certified.lean` currently fixes:
+The action layer is now parameterised:
 
-- first-order source/residual configurations;
-- a list reverse step;
-- a first-order step-indexed `SBisim`;
-- a list base `ListRel`;
-- accumulator-only `GenCert`;
-- reverse-only `ResidualFoldCert`.
+- `Transport/Action.lean` defines `Process` (`Config`, `Step`, `Obs`),
+  step-indexed `Bisim`, `FoldCert`, and `Derivation` independently of the reverse
+  worker;
+- `Transport/ActionReverse.lean` instantiates the reverse source/residual
+  processes and proves `reverseDerivation_sound`.
 
-To support other brands, abstract the action calculus over the parameters above
-and instantiate:
+Still specific to reverse/`Certified`:
 
-1. a `Language`/`Config`/`Step`/`Obs` interface;
-2. a `Gen`/`Fold` certificate interface at that language;
-3. a typed `LR`/bisimulation for the target types;
-4. a selection/whistle/oracle interface;
-5. a result shape: single term, forest, or positive/negative set.
+- `GenCert` over the accumulator;
+- the `ListRel` base relation;
+- the `RDerivation` action tree built on the specific reverse types.
+
+To support other brands, continue with:
+
+1. a generic `Gen` certificate interface (schema parameters + proof);
+2. a typed `LR`/bisimulation for the target types;
+3. a selection/whistle/oracle interface;
+4. a result shape: single term, forest, or positive/negative set.
 
 The reverse instance remains a regression test: the action tree, the
 generalisation certificate, the fold certificate, and the final typed relation
