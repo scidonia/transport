@@ -301,4 +301,18 @@ theorem reverse_residual_LR {α : Type u} (xs : List α) :
   rw [residual_run]
   simpa [Option.getD] using reverse_LR (α := α) xs
 
+
+/-- Demonstration: generalisation over the accumulator, then the reverse
+fold/residualise tree, with the composed certificate and the residual result. -/
+theorem reverse_certified_transform {α : Type u} (x : α) (xs : List α) :
+    (∀ n, SBisim n ⟨x :: xs, []⟩ ⟨.rev, x :: xs, []⟩) ∧
+      rrun ((x :: xs).length + 1) ⟨.rev, x :: xs, []⟩ = some (x :: xs).reverse := by
+  constructor
+  · exact RDerivation.sound (reverseGeneralised ⟨x :: xs, []⟩)
+  · exact residual_run (x :: xs)
+
+example : (∀ n, SBisim n ⟨[1, 2], []⟩ ⟨.rev, [1, 2], []⟩) ∧
+    rrun 3 ⟨.rev, [1, 2], []⟩ = some ([2, 1] : List Nat) := by
+  simpa using reverse_certified_transform (1 : Nat) [2]
+
 end Transport.Certified

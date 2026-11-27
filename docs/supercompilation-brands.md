@@ -97,12 +97,17 @@ Still specific to reverse/`Certified`:
 - the list base relation `ListRel`;
 - the `RDerivation` action tree built on the specific reverse types.
 
+A process-level typed relation is now in `Transport/ActionRel.lean`:
+`BisimRel` is parameterised by a heterogeneous result relation and carries
+`FoldCertRel`, `GenCertRel`, and `DerivationRel`; `ActionReverseRel`
+instantiates it at `ListRel Eq`.
+
 To support other brands, continue with:
 
-1. a typed `LR`/bisimulation for the target types, parameterised over the process;
+1. higher-order `Pi`/application clauses and dependent `LR` instances;
 2. a selection/whistle/oracle interface;
 3. a result shape: single term, forest, or positive/negative set;
-4. higher-order `Pi`/application clauses and higher-order generalisation.
+4. higher-order generalisation patterns.
 
 The reverse instance remains a regression test: the action tree, the
 generalisation certificate, the fold certificate, and the final typed relation

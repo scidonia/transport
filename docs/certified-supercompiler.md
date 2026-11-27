@@ -259,3 +259,24 @@ step-indexed bisimulation, a typed `LR`, or a general supercompiler.  The T1--T1
 obligations in `docs/equivalence.md` remain the acceptance criteria.  The
 brand-parameterisation (HOSC, SCE, distillation, positive/negative,
 multi-result) is in [docs/supercompilation-brands.md](supercompilation-brands.md).
+
+
+## 14. A certified generalisation + fold
+
+`Transport/Certified.lean` contains the named demonstration:
+
+```lean
+theorem reverse_certified_transform (x : α) (xs : List α) :
+    (∀ n, SBisim n ⟨x :: xs, []⟩ ⟨.rev, x :: xs, []⟩) ∧
+    rrun ((x :: xs).length + 1) ⟨.rev, x :: xs, []⟩ =
+      some (x :: xs).reverse
+```
+
+The first component is `RDerivation.sound (reverseGeneralised …)`: the
+generalisation action (accumulator schema) composed with the reverse
+fold/residualise tree.  The second is the residual run.  The concrete instance
+`x = 1, xs = [2]` is `[2,1]`.
+
+The process-level relation is also in `Transport/ActionRel.lean`:
+`BisimRel` (heterogeneous result relation), `FoldCertRel`, `GenCertRel`, and
+`DerivationRel`; `ActionReverseRel` instantiates it at `ListRel Eq`.
