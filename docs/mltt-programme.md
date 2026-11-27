@@ -158,9 +158,11 @@ prepended and not appended.  The list representation can represent the result,
 but the context operations and lookup/weakening lemmas need an insertion at
 `indices.length`; `ctxExtend`/`ctxExtendMany` provide only prepending.
 
-This is the context-operation gap.  A telescope context with an explicit
-middle/old extension makes the position structural; adding more `substMany`
-lemmas does not.
+This is the context-operation gap.  `Transport/Mltt/ContextInsert.lean` now
+supplies `Ctx.insertAt` and proves the lookup, `ctxExtendMany`, and
+`caseMotiveCtx` insertion lemmas.  The case-motive context can be placed
+structurally; the remaining work is to use it in the weakening proof, which
+still needs the base `HasType` convention settled.
 
 
 The order matters because each layer consumes the previous one.

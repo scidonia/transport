@@ -33,3 +33,4 @@ import Transport.Mltt.ScopedSubst
 import Transport.Mltt.TypingWellFormed
 import Transport.Mltt.SigIndexFull
 import Transport.Mltt.SigIndexSubst
+import Transport.Mltt.ContextInsert
