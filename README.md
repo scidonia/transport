@@ -67,6 +67,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
 | well-scoped invariant; identity renaming below the depth | `Transport.Mltt.Scoped.rename_upRenN_of_wellScoped` |
+| well-scoped closure under renaming/substitution | `Transport.Mltt.Scoped.WellScoped.rename`, `wellScoped_subst` |
+| typed context morphism | `Transport.Mltt.Scoped.CtxMap` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
 | weakening for the `Eq` family | `Transport.Mltt.Weaken.hasType_weaken_proof` |
 | renaming and substitution algebra | `Transport.Mltt.Subst.*` |

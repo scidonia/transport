@@ -59,7 +59,7 @@ tests for the new core, not a parallel theory.
 | uniform signatures | `WellFormedSigFull`; `Nat`/`Vec`/`Fin`/`Eq`; gates | all signatures; constructor examples |
 | dependent case | `HasTypeDep.caseDep`; constant and `P scrut` motives | self-contained core; recursor with ihs |
 | conversion | none | `Conv` with beta/eta/J/case; typing up to `Conv` |
-| weakening/substitution | `Eq`-specific; scoped `substMany` algebra | general for the uniform core |
+| weakening/substitution | `Eq`-specific; scoped `substMany` algebra; `WellScoped` closure and `CtxMap` | general for the uniform core |
 | subject reduction | none | beta, `J`, case, recursor |
 | progress | none | total fragment; canonicity |
 | normalisation/confluence | none | SN, confluence, normal forms |

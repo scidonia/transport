@@ -1,0 +1,204 @@
+import Transport.Mltt.Scoped
+
+/-!
+# Scoped substitution
+
+The first prerequisite for full-core substitution: well-scoped terms are closed
+under renaming and substitution, and a context morphism is typed pointwise.
+
+This file does not yet strengthen `HasType` with a well-formedness invariant.
+It establishes the scoping layer that the typing proof will consume.
+-/
+
+namespace Transport.Mltt.Scoped
+
+open Transport.Mltt
+open Transport.Mltt.Weaken
+
+theorem upRenN_lt {m : Nat} {f : Nat → Nat} {d d' : Nat}
+    (hf : ∀ x, x < d → f x < d') :
+    ∀ x, x < d + m → Tm.upRenN m f x < d' + m := by
+  induction m with
+  | zero => simpa [Tm.upRenN] using hf
+  | succ m ih =>
+      intro x hx
+      rw [Tm.upRenN]
+      cases x with
+      | zero => simp [Tm.upRen]; omega
+      | succ x =>
+          have hx' : x < d + m := by omega
+          simp only [Tm.upRen]
+          have := ih x hx'
+          omega
+
+private theorem WellScoped.rename_aux :
+    ∀ (t : Tm) (f : Nat → Nat) (d d' : Nat), (∀ x, x < d → f x < d') →
+      WellScoped d t → WellScoped d' (Tm.rename f t) := by
+  apply tm_strong_induction
+  intro t ih f d d' hf h
+  cases t with
+  | var x =>
+      cases h with
+      | var hx => simp [Tm.rename]; exact WellScoped.var (hf x hx)
+  | sort i => simp [Tm.rename]; exact WellScoped.sort
+  | pi A B =>
+      cases h with
+      | pi hA hB =>
+          simp only [Tm.rename]
+          apply WellScoped.pi
+          · exact ih A (size_lt_pi_left A B) f d d' hf hA
+          · exact ih B (size_lt_pi_right A B) (Tm.upRen f) (d + 1) (d' + 1)
+              (upRenN_lt (m := 1) hf) hB
+  | lam A b =>
+      cases h with
+      | lam hA hb =>
+          simp only [Tm.rename]
+          apply WellScoped.lam
+          · exact ih A (size_lt_lam_left A b) f d d' hf hA
+          · exact ih b (size_lt_lam_right A b) (Tm.upRen f) (d + 1) (d' + 1)
+              (upRenN_lt (m := 1) hf) hb
+  | app g u =>
+      cases h with
+      | app hf' hu =>
+          simp only [Tm.rename]
+          exact WellScoped.app
+            (ih g (size_lt_app_left g u) f d d' hf hf')
+            (ih u (size_lt_app_right g u) f d d' hf hu)
+  | fix A b =>
+      cases h with
+      | fix hA hb =>
+          simp only [Tm.rename]
+          apply WellScoped.fix
+          · exact ih A (size_lt_fix_left A b) f d d' hf hA
+          · exact ih b (size_lt_fix_right A b) (Tm.upRen f) (d + 1) (d' + 1)
+              (upRenN_lt (m := 1) hf) hb
+  | ind I args =>
+      cases h with
+      | ind hargs =>
+          simp only [Tm.rename]
+          apply WellScoped.ind
+          intro a ha
+          rcases List.mem_map.mp ha with ⟨b, hb, rfl⟩
+          exact ih b (size_lt_ind_mem hb) f d d' hf (hargs b hb)
+  | roll I c args =>
+      cases h with
+      | roll hargs =>
+          simp only [Tm.rename]
+          apply WellScoped.roll
+          intro a ha
+          rcases List.mem_map.mp ha with ⟨b, hb, rfl⟩
+          exact ih b (size_lt_roll_mem hb) f d d' hf (hargs b hb)
+  | case I n scrut C brs =>
+      cases h with
+      | case hscrut hC hbrs =>
+          simp only [Tm.rename]
+          apply WellScoped.case
+          · exact ih scrut (size_lt_case_scrut I n scrut C brs) f d d' hf hscrut
+          · exact ih C (size_lt_case_motive I n scrut C brs) (Tm.upRenN (n + 1) f) (d + n + 1) (d' + n + 1)
+              (by simpa [Nat.add_assoc] using upRenN_lt (m := n + 1) hf) hC
+          · intro b hb
+            rcases List.mem_map.mp hb with ⟨c, hc, rfl⟩
+            exact ih c (size_lt_case_mem hc) f d d' hf (hbrs c hc)
+
+theorem WellScoped.rename (f : Nat → Nat) {d d' : Nat} {t : Tm}
+    (hf : ∀ x, x < d → f x < d') (h : WellScoped d t) :
+    WellScoped d' (Tm.rename f t) :=
+  WellScoped.rename_aux t f d d' hf h
+
+theorem WellScoped.shift {d : Nat} {t : Tm} (h : WellScoped d t) :
+    WellScoped (d + 1) (Tm.shift 1 0 t) := by
+  simpa [Tm.shift] using h.rename (Tm.shiftSub 1 0) (fun x hx => by
+    simp [Tm.shiftSub, hx])
+
+theorem upSubN_wellScoped (m : Nat) {σ : Nat → Tm} {d d' : Nat}
+    (hσ : ∀ x, x < d → WellScoped d' (σ x)) :
+    ∀ x, x < d + m → WellScoped (d' + m) (Tm.upSubN m σ x) := by
+  induction m with
+  | zero => simpa [Tm.upSubN] using hσ
+  | succ m ih =>
+      intro x hx
+      rw [Tm.upSubN]
+      cases x with
+      | zero => exact WellScoped.var (by omega)
+      | succ x =>
+          have hx' : x < d + m := by omega
+          have h := ih x hx'
+          simpa [Tm.upSub, Nat.add_assoc] using h.shift
+
+private theorem wellScoped_subst_aux :
+    ∀ (t : Tm) (d d' : Nat) (σ : Nat → Tm),
+      WellScoped d t → (∀ x, x < d → WellScoped d' (σ x)) →
+      WellScoped d' (Tm.subst σ t) := by
+  apply tm_strong_induction
+  intro t ih d d' σ ht hσ
+  cases t with
+  | var x =>
+      cases ht with
+      | var hx => simpa [Tm.subst] using hσ x hx
+  | sort i => simpa [Tm.subst] using WellScoped.sort
+  | pi A B =>
+      cases ht with
+      | pi hA hB =>
+          simpa [Tm.subst] using WellScoped.pi
+            (ih A (size_lt_pi_left A B) d d' σ hA hσ)
+            (ih B (size_lt_pi_right A B) (d + 1) (d' + 1) (Tm.upSub σ)
+              hB (by simpa [Tm.upSubN, Tm.upSub] using upSubN_wellScoped 1 hσ))
+  | lam A b =>
+      cases ht with
+      | lam hA hb =>
+          simpa [Tm.subst] using WellScoped.lam
+            (ih A (size_lt_lam_left A b) d d' σ hA hσ)
+            (ih b (size_lt_lam_right A b) (d + 1) (d' + 1) (Tm.upSub σ)
+              hb (by simpa [Tm.upSubN, Tm.upSub] using upSubN_wellScoped 1 hσ))
+  | app f u =>
+      cases ht with
+      | app hf hu =>
+          simpa [Tm.subst] using WellScoped.app
+            (ih f (size_lt_app_left f u) d d' σ hf hσ)
+            (ih u (size_lt_app_right f u) d d' σ hu hσ)
+  | fix A b =>
+      cases ht with
+      | fix hA hb =>
+          simpa [Tm.subst] using WellScoped.fix
+            (ih A (size_lt_fix_left A b) d d' σ hA hσ)
+            (ih b (size_lt_fix_right A b) (d + 1) (d' + 1) (Tm.upSub σ)
+              hb (by simpa [Tm.upSubN, Tm.upSub] using upSubN_wellScoped 1 hσ))
+  | ind I args =>
+      cases ht with
+      | ind hargs =>
+          simp only [Tm.subst]
+          apply WellScoped.ind
+          intro a ha
+          rcases List.mem_map.mp ha with ⟨b, hb, rfl⟩
+          exact ih b (size_lt_ind_mem hb) d d' σ (hargs b hb) hσ
+  | roll I c args =>
+      cases ht with
+      | roll hargs =>
+          simp only [Tm.subst]
+          apply WellScoped.roll
+          intro a ha
+          rcases List.mem_map.mp ha with ⟨b, hb, rfl⟩
+          exact ih b (size_lt_roll_mem hb) d d' σ (hargs b hb) hσ
+  | case I n scrut C brs =>
+      cases ht with
+      | case hscrut hC hbrs =>
+          simp only [Tm.subst]
+          apply WellScoped.case
+          · exact ih scrut (size_lt_case_scrut I n scrut C brs) d d' σ hscrut hσ
+          · exact ih C (size_lt_case_motive I n scrut C brs) (d + n + 1) (d' + n + 1)
+              (Tm.upSubN (n + 1) σ) hC
+              (by simpa [Tm.upSubN, Nat.add_assoc] using upSubN_wellScoped (n + 1) hσ)
+          · intro b hb
+            rcases List.mem_map.mp hb with ⟨c, hc, rfl⟩
+            exact ih c (size_lt_case_mem hc) d d' σ (hbrs c hc) hσ
+
+theorem wellScoped_subst {d d' : Nat} {σ : Nat → Tm} {t : Tm}
+    (ht : WellScoped d t)
+    (hσ : ∀ x, x < d → WellScoped d' (σ x)) :
+    WellScoped d' (Tm.subst σ t) :=
+  wellScoped_subst_aux t d d' σ ht hσ
+
+def CtxMap (env : Env) (σ : Nat → Tm) (Γ Δ : Ctx) : Prop :=
+  ∀ x A, ctxLookup Γ x = some A → HasType env Δ (σ x) (Tm.subst σ A)
+
+end Transport.Mltt.Scoped
