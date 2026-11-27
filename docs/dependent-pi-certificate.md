@@ -85,6 +85,10 @@ This is the simplest genuinely dependent Pi certificate.
 - `Transport/ActionRel.lean` uses a **fixed** result relation
   `rel : S -> R -> Prop`; it cannot encode a Pi certificate, whose relation is
   a family over the argument relation.
+- `Transport/FiberAction.lean` lifts the action calculus to a `FiberRel` family:
+  `FiberBisim`, `FiberFoldCert`, `FiberGenCert`, and `FiberDerivation` are the
+  per-index instances of the existing certificates.  It is not yet connected
+  to the step-indexed object relation or to a Pi fold/generalisation.
 - There is no object-language relation over the **core** `Tm` and no fiberwise
   transport theorem.
 - There is a semantic `PiCert` over arbitrary index types, families, and
