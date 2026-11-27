@@ -74,6 +74,33 @@ and what each changes are in
 
 ## 4. Metatheory targets
 
+### Dependency correction
+
+The first attempted order was
+
+```text
+scoped substitution -> HasTypeWF -> substitution
+```
+
+The scoped layer is now available (`WellScoped` closure, `CtxMap`, and
+`substMany_subst_of_wellScoped`).  The next step is **general weakening**, not
+substitution.  Context extension for `pi`/`lam`/`fix` needs
+
+```text
+HasType env Γ t A  ->  HasType env (B :: Γ) (shift t) (shift A)
+```
+
+for arbitrary terms, and only the `Eq`-specific weakening proof exists.  The
+context-morphism extension needed by substitution is a consequence of that
+general weakening.  The corrected order is
+
+1. general weakening for the full core;
+2. `CtxMap` extension under a binder;
+3. `HasTypeWF` substitution;
+4. `roll`/`case` with signature and motive scope;
+5. `TransportData.Subst` and `Congruence` instances.
+
+
 The order matters because each layer consumes the previous one.
 
 1. **Telescope contexts.**  A context is a telescope; lookup, weakening, and
