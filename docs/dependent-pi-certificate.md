@@ -85,8 +85,11 @@ This is the simplest genuinely dependent Pi certificate.
 - `Transport/ActionRel.lean` uses a **fixed** result relation
   `rel : S -> R -> Prop`; it cannot encode a Pi certificate, whose relation is
   a family over the argument relation.
-- There is no `TyRel`/`LR` over dependent types, no `PiCert`, and no fiberwise
+- There is no object-language `TyRel`/`LR` over dependent types and no fiberwise
   transport theorem.
+- There is a semantic `PiCert` over arbitrary index types, families, and
+  fiberwise relations, with a polymorphic identity certificate `polyIdPiCert`
+  in `Transport/DependentPi.lean`.
 
 ## What is needed
 
@@ -100,4 +103,5 @@ This is the simplest genuinely dependent Pi certificate.
 
 The first target is the polymorphic identity because it exercises a type index,
 a function-space fiber, and the dependent Pi clause without requiring a
-recursive family.
+recursive family.  That target is now checked semantically; the object-language
+Pi and the fibered action interface are the next steps.
