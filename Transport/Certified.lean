@@ -164,6 +164,8 @@ theorem residual_run {α : Type u} (xs : List α) :
 
 structure ResidualFoldCert {α : Type u} (s : SourceConfig α)
     (r : ResidualConfig α) where
+  source_unfold : SourceConfig α
+  source_step_eq : sstep s = some source_unfold
   unfold : ResidualConfig α
   step_eq : rstep r = some unfold
   bisim : ∀ n, SBisim n s r
@@ -171,6 +173,8 @@ structure ResidualFoldCert {α : Type u} (s : SourceConfig α)
 
 def residualFold {α : Type u} (x : α) (xs a : List α) :
     ResidualFoldCert ⟨x :: xs, a⟩ ⟨.rev, x :: xs, a⟩ where
+  source_unfold := ⟨xs, x :: a⟩
+  source_step_eq := rfl
   unfold := ⟨.rev, xs, x :: a⟩
   step_eq := rfl
   bisim := R_bisim ⟨rfl, rfl⟩
@@ -200,5 +204,54 @@ theorem genCert_instance {α : Type u} {s : SourceConfig α} (g : GenCert s) :
     ∀ n, SBisim n s (g.schema s.a) := by
   intro n
   simpa using g.sound s.a n
+
+
+/-! ## Stage 3: the supercompiler derivation -/
+
+inductive RDerivation {α : Type u} : SourceConfig α → ResidualConfig α → Type u
+  | halt (s : SourceConfig α) (r : ResidualConfig α)
+      (hxs : s.xs = []) (rxs : r.xs = []) (ha : s.a = r.a) :
+      RDerivation s r
+  | fold (s : SourceConfig α) (r : ResidualConfig α)
+      (cert : ResidualFoldCert s r)
+      (rest : RDerivation cert.source_unfold cert.unfold) :
+      RDerivation s r
+
+namespace RDerivation
+
+theorem sound {α : Type u} {s : SourceConfig α} {r : ResidualConfig α}
+    (d : RDerivation s r) : ∀ n, SBisim n s r := by
+  induction d with
+  | halt s r hxs rxs ha =>
+      intro n
+      cases n with
+      | zero => trivial
+      | succ n =>
+          rcases s with ⟨sxs, sa⟩
+          rcases r with ⟨rlabel, rxs, ra⟩
+          cases rlabel
+          simp at hxs rxs ha
+          rcases hxs with rfl
+          rcases rxs with rfl
+          rcases ha with rfl
+          simp [SBisim, sstep, rstep, sObs, rObs]
+  | fold s r cert rest ih =>
+      exact cert.bisim
+
+end RDerivation
+
+/-- The reverse supercompiler: fold on each cons, residualise on nil. -/
+def reverseDerivation {α : Type u} : (xs : List α) → (a : List α) →
+    RDerivation ⟨xs, a⟩ ⟨.rev, xs, a⟩
+  | [], a => .halt ⟨[], a⟩ ⟨.rev, [], a⟩ rfl rfl rfl
+  | x :: xs, a =>
+      .fold ⟨x :: xs, a⟩ ⟨.rev, x :: xs, a⟩
+        (residualFold x xs a)
+        (reverseDerivation xs (x :: a))
+
+/-- The top-level certificate carried by the reverse derivation. -/
+theorem reverseDerivation_sound {α : Type u} (xs a : List α) :
+    ∀ n, SBisim n ⟨xs, a⟩ ⟨.rev, xs, a⟩ :=
+  RDerivation.sound (reverseDerivation xs a)
 
 end Transport.Certified

@@ -223,12 +223,18 @@ proof is the step-indexed bisimulation `R_bisim` for every accumulator.
 An oracular generaliser must return the same structure, including the proof.
 A general anti-unification algorithm and a non-accumulator schema remain open.
 
-### Stage 3: a simple supercompiler
+### Stage 3: a simple supercompiler — checked for reverse
 
-Implement driving, generalisation, folding, and residualisation for the
-first-order fragment.  Each step returns its certificate; folds use
-`FoldCert`; generalisations use `GenCert`; the residual derivation composes
-them.
+`Transport/Certified.lean` now has:
+
+- `RDerivation`: fold and halt/residualise steps, each carrying its certificate;
+- `RDerivation.sound`: every derivation carries the step-indexed bisimulation;
+- `reverseDerivation`: fold on each cons, residualise on nil;
+- `reverseDerivation_sound`: the top-level source/residual certificate.
+
+This is a concrete first-order loop for reverse, not yet a generic driving /
+generalisation search.  The accumulator generalisation is `GenCert`; the fold is
+`ResidualFoldCert`; the residual program is the `rev` label.
 
 ### Stage 4: the typed relation
 
