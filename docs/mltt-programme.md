@@ -120,7 +120,22 @@ and the Eq-specific weakening must then be revalidated against it.
 
 The first general step is in place: `WellScoped.mono`, `sigTyListFull`,
 `rollIndexArgsFull`, and their rename lemmas under `WellFormedSigFull`
-(`Transport/Mltt/SigIndexFull.lean`).  General weakening is next.
+(`Transport/Mltt/SigIndexFull.lean`).  General weakening is next, but it has
+two remaining dependencies:
+
+1. **Base `HasType` weakening.**  `HasTypeDep.ofHasType` embeds the old
+   judgment, and the old `roll` result-index convention is parameter-only.
+   Either the convention must be changed or the old weakening must be proved
+   separately and supplied to the dependent proof.
+2. **Case-motive context weakening.**  `HasTypeDep.caseDep` lives under
+   `caseMotiveCtx`; its weakening needs a lemma commuting `ctxExtendMany` and
+   `caseMotiveCtx` with a fresh context binder.  The scoped composition lemmas
+   are available, but this context lemma is not.
+
+Until those are settled, a full `hasTypeDep_weaken` theorem cannot be stated
+without a hypothesis standing in for one of them.  The scoped/substitution and
+signature-index layers are complete; the next actual proofs are the two
+context/weakening lemmas above, not more substitution algebra.
 
 
 The order matters because each layer consumes the previous one.
