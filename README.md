@@ -55,13 +55,13 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | positive closure language and higher-order LR | `Transport.Closure.eval`, `apply`, `LR` |
 | closure value process/action instance | `Transport.Closure.LRAll`, `valueCert`, `nat_zero_LRAll` |
 | closure substitution and small-step process | `Transport.Closure.subst0`, `step`, `termProcess` |
-| typed numeral term certificate at LRAll | `Transport.Closure.termCertNat`, `termCertNat_sound` |
-| identity function certificate at `arr A A` | `Transport.Closure.identityLR`, `identityVal` |
-| semantic dependent Pi certificate | `Transport.DependentPi.PiCert`, `polyIdPiCert` |
-| step-indexed dependent Pi certificate | `Transport.DependentSyntax.polyIdTmRel` |
+| example: typed numeral term certificate at LRAll | `Transport.Closure.termCertNat`, `termCertNat_sound` |
+| example: identity function certificate at `arr A A` | `Transport.Closure.identityLR`, `identityVal` |
+| general semantic dependent Pi certificate | `Transport.DependentPi.PiCert`; `polyIdPiCert` is an example |
+| example: step-indexed object Pi certificate | `Transport.DependentSyntax.polyIdTmRel` |
 | fibered action relation | `Transport.FiberAction.FiberBisim`, `FiberDerivation` |
-| fibered Pi certificate | `Transport.FiberAction.FiberPiCert`, `trivialPi` |
-| recursive countdown fiber certificate | `Transport.FiberAction.countdownPi`, `countdownDeriv` |
+| general fibered Pi certificate | `Transport.FiberAction.FiberPiCert`, `FiberPiCert.sound` |
+| example: recursive countdown fiber | `Transport.FiberAction.countdownPi`, `countdownDeriv` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |

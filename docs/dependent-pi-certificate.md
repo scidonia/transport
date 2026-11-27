@@ -77,6 +77,10 @@ This is the simplest genuinely dependent Pi certificate.
 
 ## What the current code has
 
+The general objects are `PiCert`, `FiberPiCert`, `FiberBisim`, and
+`FiberDerivation`.  The identity, one-point fiber, and countdown families are
+**examples**, not the main theorem.
+
 - `Transport/Closure.lean` has `Ty.arr` only; `identityLR` is the nondependent
   special case.
 - `Transport/Mltt/Dependent.lean` has `HasTypeDep` with `pi`, `Eq`, and
@@ -90,10 +94,9 @@ This is the simplest genuinely dependent Pi certificate.
   per-index instances of the existing certificates.
 - `FiberPiCert` is the type-valued Pi certificate: a dependent family of fiber
   derivations over an index relation.  `FiberPiCert.sound` gives a fiber
-  bisimulation at every index pair; `trivialPi` is the concrete one-point
-  instance.  `countdownPi` is a nontrivial recursive instance: a countdown
-  process family with a fold at every start.  It is fold-only (no
-  generalisation) and not yet connected to the step-indexed object relation or
+  bisimulation at every index pair.  `trivialPi` is an example on the
+  one-point fiber; `countdownPi` is an example of a recursive fold family.  It
+  is fold-only and not yet connected to the step-indexed object relation or
   fiberwise transport.
 - There is no object-language relation over the **core** `Tm` and no fiberwise
   transport theorem.
