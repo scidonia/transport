@@ -83,3 +83,15 @@ layer:
 This is a leaf/value instance, not yet a higher-order transformation with
 evaluation steps, folds, or generalisation.  The next step is a closure process
 with a beta/evaluation step relation and a higher-order `FoldCertRel`/`GenCertRel`.
+
+
+## Operational layer
+
+`Transport/Closure.lean` now has de Bruijn `shift`/`subst0`, a deterministic
+small-step `step`, and `termProcess` (small-step configurations with a
+fuel-indexed observation).  Concrete examples cover beta substitution and the
+identity application.
+
+This gives the higher-order process language a real step relation.  The next
+step is a typed term process and higher-order `FoldCertRel`/`GenCertRel`
+instances.

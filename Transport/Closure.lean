@@ -69,6 +69,52 @@ example : eval 2 (.lam .zero) [] = some (.closure .zero []) := by
 
 
 
+
+/-! ## Substitution and small-step evaluation -/
+
+def shift (d c : Nat) : Tm → Tm
+  | .var x => if x < c then .var x else .var (x + d)
+  | .zero => .zero
+  | .succ t => .succ (shift d c t)
+  | .lam t => .lam (shift d (c + 1) t)
+  | .app f a => .app (shift d c f) (shift d c a)
+
+def subst0 (u : Tm) : Tm → Tm
+  | .var 0 => u
+  | .var (x + 1) => .var x
+  | .zero => .zero
+  | .succ t => .succ (subst0 u t)
+  | .lam t => .lam (subst0 (shift 1 0 u) t)
+  | .app f a => .app (subst0 u f) (subst0 u a)
+
+def step : Tm → Option Tm
+  | .app (.lam body) a => some (subst0 a body)
+  | .app f a =>
+      match step f with
+      | some f' => some (.app f' a)
+      | none =>
+          match step a with
+          | some a' => some (.app f a')
+          | none => none
+  | .succ t =>
+      match step t with
+      | some t' => some (.succ t')
+      | none => none
+  | _ => none
+
+example : subst0 (.lam (.var 0)) (.var 0) = .lam (.var 0) := by
+  rfl
+
+example : step (.app (.lam (.var 0)) (.lam (.var 0))) =
+    some (.lam (.var 0)) := by
+  rfl
+
+/-- A term process: small-step evaluation, with a fuel-indexed observation. -/
+def termProcess (fuel : Nat) : Transport.Action.Process Val where
+  Config := Tm
+  step := step
+  obs := fun t => eval fuel t []
+
 /-! ## A process/action instance at the closure relation -/
 
 def LRAll (ty : Ty) (v w : Val) : Prop := ∀ n, LR n ty v w
