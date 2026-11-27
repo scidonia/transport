@@ -162,6 +162,11 @@ composition.  The paper should say this plainly: the theorem is a schema, and
 the research question is which instance of the schema a given supercompiler
 admits.
 
+The general transport step and its two-stage composition are formalised in
+`Transport/GeneralTransport.lean` (`transport_along`,
+`transport_theorem_comp`).  These leave the relations arbitrary; the three
+regimes are instances, not separate theorems.
+
 ### 4.1 Coherence
 
 A transport operation is expected to satisfy

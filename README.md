@@ -72,6 +72,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | substitution preserves typing on the function fragment | `Transport.Mltt.Fragment.hasType_subst_simple` |
 | beta contraction preserves typing on the fragment | `Transport.Mltt.Beta.beta_preserves_hasType` |
 | transport theorem schema | `Transport.transport_theorem` |
+| general transport step and composition | `Transport.transport_along`, `Transport.transport_theorem_comp` |
 | definitional transport, instantiated at beta | `Transport.BetaInstance.transport` |
 | orbit connectivity is an equivalence | `Transport.Orbit.orbitConnected_equivalence` |
 | typed beta fixed points, separated then joined | `Transport.Orbit.BetaInstance.typed_fixed_points_disconnected`, `typed_fixed_points_connected_after_binder` |
