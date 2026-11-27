@@ -1,4 +1,5 @@
 import Transport.Mltt.Scoped
+import Transport.Mltt.Subst
 
 /-!
 # Scoped substitution
@@ -200,5 +201,126 @@ theorem wellScoped_subst {d d' : Nat} {σ : Nat → Tm} {t : Tm}
 
 def CtxMap (env : Env) (σ : Nat → Tm) (Γ Δ : Ctx) : Prop :=
   ∀ x A, ctxLookup Γ x = some A → HasType env Δ (σ x) (Tm.subst σ A)
+
+
+/-- Lifted substitutions agree on the scoped part. -/
+theorem upSubN_eq_of_lt (m : Nat) {d : Nat} {τ τ' : Nat → Tm}
+    (h : ∀ x, x < d → τ x = τ' x) :
+    ∀ x, x < d + m → Tm.upSubN m τ x = Tm.upSubN m τ' x := by
+  induction m with
+  | zero => simpa [Tm.upSubN] using h
+  | succ m ih =>
+      intro x hx
+      rw [Tm.upSubN, Tm.upSubN]
+      cases x with
+      | zero => rfl
+      | succ x =>
+          have hx' : x < d + m := by omega
+          have hh := ih x hx'
+          simp [Tm.upSub, hh]
+
+private theorem subst_congr_aux :
+    ∀ (t : Tm) (d : Nat) (τ τ' : Nat → Tm),
+      WellScoped d t → (∀ x, x < d → τ x = τ' x) →
+      Tm.subst τ t = Tm.subst τ' t := by
+  apply tm_strong_induction
+  intro t ih d τ τ' h heq
+  cases t with
+  | var x =>
+      cases h with
+      | var hx => simpa [Tm.subst] using heq x hx
+  | sort i => simp [Tm.subst]
+  | pi A B =>
+      cases h with
+      | pi hA hB =>
+          simp only [Tm.subst]
+          rw [ih A (size_lt_pi_left A B) d τ τ' hA heq]
+          rw [ih B (size_lt_pi_right A B) (d + 1) (Tm.upSub τ) (Tm.upSub τ') hB
+            (by
+              intro x hx
+              cases x with
+              | zero => rfl
+              | succ x =>
+                  have hx' : x < d := by omega
+                  simp [Tm.upSub, heq x hx'])]
+  | lam A b =>
+      cases h with
+      | lam hA hb =>
+          simp only [Tm.subst]
+          rw [ih A (size_lt_lam_left A b) d τ τ' hA heq]
+          rw [ih b (size_lt_lam_right A b) (d + 1) (Tm.upSub τ) (Tm.upSub τ') hb
+            (by
+              intro x hx
+              cases x with
+              | zero => rfl
+              | succ x =>
+                  have hx' : x < d := by omega
+                  simp [Tm.upSub, heq x hx'])]
+  | app f u =>
+      cases h with
+      | app hf hu =>
+          simp only [Tm.subst]
+          rw [ih f (size_lt_app_left f u) d τ τ' hf heq]
+          rw [ih u (size_lt_app_right f u) d τ τ' hu heq]
+  | fix A b =>
+      cases h with
+      | fix hA hb =>
+          simp only [Tm.subst]
+          rw [ih A (size_lt_fix_left A b) d τ τ' hA heq]
+          rw [ih b (size_lt_fix_right A b) (d + 1) (Tm.upSub τ) (Tm.upSub τ') hb
+            (by
+              intro x hx
+              cases x with
+              | zero => rfl
+              | succ x =>
+                  have hx' : x < d := by omega
+                  simp [Tm.upSub, heq x hx'])]
+  | ind I args =>
+      cases h with
+      | ind hargs =>
+          simp only [Tm.subst]
+          congr 1
+          apply List.map_congr_left
+          intro a ha
+          exact ih a (size_lt_ind_mem ha) d τ τ' (hargs a ha) heq
+  | roll I c args =>
+      cases h with
+      | roll hargs =>
+          simp only [Tm.subst]
+          congr 1
+          apply List.map_congr_left
+          intro a ha
+          exact ih a (size_lt_roll_mem ha) d τ τ' (hargs a ha) heq
+  | case I n scrut C brs =>
+      cases h with
+      | case hscrut hC hbrs =>
+          simp only [Tm.subst]
+          rw [ih scrut (size_lt_case_scrut I n scrut C brs) d τ τ' hscrut heq]
+          rw [ih C (size_lt_case_motive I n scrut C brs) (d + n + 1)
+            (Tm.upSubN (n + 1) τ) (Tm.upSubN (n + 1) τ') hC
+            (upSubN_eq_of_lt (n + 1) heq)]
+          congr 1
+          apply List.map_congr_left
+          intro b hb
+          exact ih b (size_lt_case_mem hb) d τ τ' (hbrs b hb) heq
+
+/-- Substitution is determined by its values on the free variables below the
+scope. -/
+theorem subst_congr_of_wellScoped {d : Nat} {τ τ' : Nat → Tm} {t : Tm}
+    (h : WellScoped d t) (heq : ∀ x, x < d → τ x = τ' x) :
+    Tm.subst τ t = Tm.subst τ' t :=
+  subst_congr_aux t d τ τ' h heq
+
+/-- Substituting arguments and then a substitution equals substituting the
+mapped arguments, when the term is scoped by the argument list. -/
+theorem substMany_subst_of_wellScoped (σ : Nat → Tm) (args : List Tm) (t : Tm)
+    (h : WellScoped args.length t) :
+    substMany (args.map (Tm.subst σ)) t = Tm.subst σ (substMany args t) := by
+  rw [substMany_eq_subst, substMany_eq_subst, Subst.subst_subst]
+  apply subst_congr_of_wellScoped (d := args.length)
+    (τ := substFun (args.map (Tm.subst σ)))
+    (τ' := fun x => Tm.subst σ (substFun args x)) h
+  intro x hx
+  simp [substFun, hx]
 
 end Transport.Mltt.Scoped
