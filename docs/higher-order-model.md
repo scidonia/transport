@@ -67,3 +67,19 @@ regression.
 The next step is a `Process`/action instance at `LR` and a certified
 higher-order transformation; the first-order certified action/demo remains the
 regression.
+
+
+## Process/action base
+
+`Transport/Closure.lean` now connects the closure `LR` to the generic action
+layer:
+
+- `LRAll ty` is the all-fuel relation at a type;
+- `valueProcess ty` is the trivial value process;
+- `valueBisim` and `valueCert` give a proof-carrying `DerivationRel` at the
+  value;
+- `nat_zero_LRAll` is the concrete base instance.
+
+This is a leaf/value instance, not yet a higher-order transformation with
+evaluation steps, folds, or generalisation.  The next step is a closure process
+with a beta/evaluation step relation and a higher-order `FoldCertRel`/`GenCertRel`.

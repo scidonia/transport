@@ -1,4 +1,5 @@
 import Std
+import Transport.ActionRel
 
 /-!
 # Positive closures and a higher-order logical relation
@@ -65,5 +66,47 @@ example : LR 1 .nat (.nat 0) (.nat 0) := by
 
 example : eval 2 (.lam .zero) [] = some (.closure .zero []) := by
   rfl
+
+
+
+/-! ## A process/action instance at the closure relation -/
+
+def LRAll (ty : Ty) (v w : Val) : Prop := ∀ n, LR n ty v w
+
+def valueProcess (_ty : Ty) : Transport.Action.Process Val where
+  Config := Val
+  step := fun _ => none
+  obs := fun v => some v
+
+theorem valueBisim {ty : Ty} {v : Val} (h : LRAll ty v v) :
+    ∀ n, Transport.ActionRel.BisimRel (LRAll ty)
+      (valueProcess ty) (valueProcess ty) n v v := by
+  intro n
+  cases n with
+  | zero => trivial
+  | succ n =>
+      simpa [Transport.ActionRel.BisimRel, valueProcess] using h
+
+def valueCert (ty : Ty) (v : Val) (h : LRAll ty v v) :
+    Transport.ActionRel.DerivationRel (LRAll ty) (valueProcess ty) (valueProcess ty)
+      (fun _ => 0) v v :=
+  Transport.ActionRel.DerivationRel.cert
+    (rel := LRAll ty) (P := valueProcess ty) (Q := valueProcess ty)
+    (measure := fun _ => 0) v v (valueBisim h)
+
+theorem valueCert_sound (ty : Ty) (v : Val) (h : LRAll ty v v) :
+    ∀ n, Transport.ActionRel.BisimRel (LRAll ty)
+      (valueProcess ty) (valueProcess ty) n v v :=
+  Transport.ActionRel.DerivationRel.sound (valueCert ty v h)
+
+theorem nat_zero_LRAll : LRAll .nat (.nat 0) (.nat 0) := by
+  intro n
+  cases n with
+  | zero => trivial
+  | succ n => simp [LR]
+
+example : Transport.ActionRel.DerivationRel (LRAll .nat)
+    (valueProcess .nat) (valueProcess .nat) (fun _ => 0) (.nat 0) (.nat 0) :=
+  valueCert .nat (.nat 0) nat_zero_LRAll
 
 end Transport.Closure
