@@ -42,6 +42,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | dependent case with a constructor parameter | `Transport.Mltt.Dependent.unit_caseDep` |
 | result-index substitution in dependent constructors | `Transport.Mltt.Dependent.HasTypeDep.rollDep` |
 | dependent case with a dependent motive | `Transport.Mltt.Dependent.Motive.unit_caseDep_motive` |
+| labelled reverse fold with a step-indexed bisimulation | `Transport.Certified.FoldCert`, `reverseFold`, `residual_sound` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
@@ -161,6 +162,7 @@ Transport/Mltt/Fragment.lean   renaming and substitution on the fragment
 Transport/Mltt/Beta.lean       beta contraction and its typing theorem
 Transport/Mltt/Dependent.lean  dependent case with constructor branch telescopes
 Transport/Mltt/DependentMotive.lean  dependent motive P scrut and branch p A
+Transport/Certified.lean  labelled reverse fold and step-indexed bisimulation
 Transport/Mltt/Conventions.lean  full-argument signatures and their telescope invariant
 Transport/Orbit.lean           orbit connectivity and the beta fixed points
 Transport/Certificate.lean     first-order reverse certificate and checker

@@ -195,17 +195,21 @@ This is a `GenCert`-style proof (generalisation over `a`) and a recursive
 worker, but the "fold" is not a distinct label/letrec edge and the relation is
 denotational equality, not a step-indexed `LR`.
 
-### Stage 1: a labeled process calculus
+### Stage 1: a labeled process calculus — first instance checked
 
-Add:
+`Transport/Certified.lean` now has:
 
-- labels/`letrec` to the residual language;
-- a step relation and observations;
-- a step-indexed `Bisim_n`;
-- a real `FoldCert` for a label that is not definitionally the term.
+- a residual label `rev`;
+- a labelled step relation and a fuel-indexed `run`;
+- a fuel-indexed bisimulation `Bisim n c` agreeing with `revAcc`;
+- `FoldCert` with the label step, unfolding, bisimulation, and guarded decrease;
+- `reverseFold` for a nonempty reverse configuration;
+- `run_sound` and `residual_sound`.
 
-The first target is the reverse worker as a label, with a bisimulation between
-the source call and the label's unfolding.
+This is a real label and a proof-carrying fold, but the label's semantics is the
+same worker: the next refinement is a residual language where the label is an
+independent recursive definition and `Bisim` is a step-indexed relation between
+two configurations, not just the label against the worker.
 
 ### Stage 2: `GenCert`
 
