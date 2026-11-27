@@ -24,3 +24,4 @@ import Transport.ActionRel
 import Transport.ActionReverseRel
 import Transport.Closure
 import Transport.DependentPi
+import Transport.DependentLR

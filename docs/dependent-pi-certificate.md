@@ -90,6 +90,10 @@ This is the simplest genuinely dependent Pi certificate.
 - There is a semantic `PiCert` over arbitrary index types, families, and
   fiberwise relations, with a polymorphic identity certificate `polyIdPiCert`
   in `Transport/DependentPi.lean`.
+- The object-language `LR` is a **canonical value** relation: it has clauses for
+  sorts, Pi types, and lambdas, but no application, reduction, or operational
+  step.  It is a first object-language certificate, not yet the full action
+  interface.
 
 ## What is needed
 

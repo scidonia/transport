@@ -58,6 +58,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | typed numeral term certificate at LRAll | `Transport.Closure.termCertNat`, `termCertNat_sound` |
 | identity function certificate at `arr A A` | `Transport.Closure.identityLR`, `identityVal` |
 | semantic dependent Pi certificate | `Transport.DependentPi.PiCert`, `polyIdPiCert` |
+| object-language dependent Pi certificate | `Transport.DependentLR.tmRel_polyIdTm` |
 | full-argument signature invariant | `Transport.Mltt.Conventions.WellFormedSigFull` |
 | positivity gate for the full-argument signatures | `Transport.Mltt.Conventions.vecDep_gate`, `finDep_gate`, `eqDep_gate`, `natDep_gate` |
 | `Eq`/`Nat`/`Vec`/`Fin` signatures in the full-argument convention | `Transport.Mltt.Conventions.eqDep_wellFormed`, `natDep_wellFormed`, `vecDep_wellFormed`, `finDep_wellFormed` |
