@@ -123,3 +123,6 @@ function-space or recursive-label certificate.
 This is the first `arr` certificate: the function-space `LR` clause is exercised
 by the identity closure.  It is a **value** certificate, not yet a term process
 with steps or a recursive-label fold.
+
+
+Dependent heterogeneous Pi certificates: [dependent-pi-certificate.md](dependent-pi-certificate.md).
