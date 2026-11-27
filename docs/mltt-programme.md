@@ -120,7 +120,9 @@ and the Eq-specific weakening must then be revalidated against it.
 
 The first general step is in place: `WellScoped.mono`, `sigTyListFull`,
 `rollIndexArgsFull`, and their rename lemmas under `WellFormedSigFull`
-(`Transport/Mltt/SigIndexFull.lean`).  General weakening is next, but it has
+(`Transport/Mltt/SigIndexFull.lean`); `sigTyListFull_subst` and
+`rollIndexArgsFull_subst` add the corresponding substitution equations
+(`Transport/Mltt/SigIndexSubst.lean`).  General weakening is next, but it has
 two remaining dependencies:
 
 1. **Base `HasType` weakening.**  `HasTypeDep.ofHasType` embeds the old

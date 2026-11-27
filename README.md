@@ -70,6 +70,7 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | well-scoped closure under renaming/substitution | `Transport.Mltt.Scoped.WellScoped.rename`, `wellScoped_subst` |
 | scoped substitution congruence and `substMany` composition | `subst_congr_of_wellScoped`, `substMany_subst_of_wellScoped` |
 | full-argument signature indices and renaming | `sigTyListFull`, `rollIndexArgsFull`, `sigTyListFull_rename`, `rollIndexArgsFull_rename` |
+| full-argument signature substitution | `sigTyListFull_subst`, `rollIndexArgsFull_subst` |
 | typed context morphism | `Transport.Mltt.Scoped.CtxMap`, `CtxMap.id` |
 | well-formed typing invariant | `Transport.Mltt.HasTypeWF`, `WellFormedEnvFull`, `WellScopedCtx` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |
