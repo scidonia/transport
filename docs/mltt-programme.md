@@ -131,7 +131,9 @@ The programme needs:
    checker to follow.
 
 The current first-order reverse certificate/derivation is the validation
-case; the dependent instance is open.
+case; the dependent instance is open.  The equivalence layer — definitional,
+contextual, logical, bisimulation/Howe, and HoTT type equivalence — is fixed in
+[docs/equivalence.md](equivalence.md).
 
 ## 7. Milestones
 
