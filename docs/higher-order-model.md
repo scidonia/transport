@@ -110,3 +110,16 @@ instances.
 This is a typed **term** process at `LRAll .nat`: the small-step term process and
 its proof-carrying `DerivationRel`.  It is a base certificate, not yet a
 function-space or recursive-label certificate.
+
+
+## First function-type certificate
+
+`Transport/Closure.lean` now has:
+
+- `identityVal = closure (var 0) []`;
+- `identityLR : LRAll (arr A A) identityVal identityVal`;
+- a value certificate at `arr nat nat`.
+
+This is the first `arr` certificate: the function-space `LR` clause is exercised
+by the identity closure.  It is a **value** certificate, not yet a term process
+with steps or a recursive-label fold.

@@ -48,7 +48,7 @@ def eval : Nat → Tm → List Val → Option Val
 
 def apply : Nat → Val → Val → Option Val
   | 0, _, _ => none
-  | n + 1, .closure body env, a => eval n body (a :: env)
+  | n + 1, .closure body env, a => eval (n + 1) body (a :: env)
   | _ + 1, .nat _, _ => none
 
 def LR : Nat → Ty → Val → Val → Prop
@@ -56,7 +56,7 @@ def LR : Nat → Ty → Val → Val → Prop
   | _ + 1, .nat, .nat a, .nat b => a = b
   | n + 1, .arr A B, f, g =>
       ∀ a b, LR n A a b →
-        match apply n f a, apply n g b with
+        match apply (n + 1) f a, apply (n + 1) g b with
         | some x, some y => LR n B x y
         | _, _ => False
   | _ + 1, _, _, _ => False
@@ -205,5 +205,24 @@ example : Transport.ActionRel.DerivationRel (LRAll .nat)
     (termProcess 3) (termProcess 3) (fun _ => 0) (numeral 2) (numeral 2) :=
   termCertNat 2
 
+
+
+/-- The identity closure at `arr A A`. -/
+def identityVal : Val := .closure (.var 0) []
+
+theorem identityLR {A : Ty} :
+    LRAll (Ty.arr A A) identityVal identityVal := by
+  intro n
+  cases n with
+  | zero => trivial
+  | succ n =>
+      intro a b hab
+      simp [apply]
+      exact hab
+
+example : Transport.ActionRel.DerivationRel (LRAll (Ty.arr Ty.nat Ty.nat))
+    (valueProcess (Ty.arr Ty.nat Ty.nat)) (valueProcess (Ty.arr Ty.nat Ty.nat))
+    (fun _ => 0) identityVal identityVal :=
+  valueCert (Ty.arr Ty.nat Ty.nat) identityVal identityLR
 
 end Transport.Closure
