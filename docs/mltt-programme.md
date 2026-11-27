@@ -139,12 +139,26 @@ signature-index layers are complete.
 The case-motive blocker is structural, not a missing algebra lemma.  Weakening
 adds a fresh binder at index `0` (`B :: Γ`), but `caseMotiveCtx` builds the
 index and scrutinee binders by **prepending** to `Γ`.  The weakened motive
-context needs the fresh binder at the **old** end of that telescope, below the
-index and scrutinee binders.  The list representation cannot express that
-insertion; a telescope context with an explicit old-end extension is required.
+context has the shape
 
-That is the M4 context redesign.  Adding more `substMany` lemmas does not
-remove it.
+```text
+scrutinee :: indices ++ B :: Γ
+```
+
+while `caseMotiveCtx Γ` is
+
+```text
+scrutinee :: indices ++ Γ
+```
+
+The fresh binder is inserted **between the index telescope and `Γ`**, not
+prepended and not appended.  The list representation can represent the result,
+but the context operations and lookup/weakening lemmas need an insertion at
+`indices.length`; `ctxExtend`/`ctxExtendMany` provide only prepending.
+
+This is the context-operation gap.  A telescope context with an explicit
+middle/old extension makes the position structural; adding more `substMany`
+lemmas does not.
 
 
 The order matters because each layer consumes the previous one.
