@@ -91,8 +91,10 @@ This is the simplest genuinely dependent Pi certificate.
 - `FiberPiCert` is the type-valued Pi certificate: a dependent family of fiber
   derivations over an index relation.  `FiberPiCert.sound` gives a fiber
   bisimulation at every index pair; `trivialPi` is the concrete one-point
-  instance.  It is not yet connected to the step-indexed object relation and has
-  no nontrivial fold/generalisation family.
+  instance.  `countdownPi` is a nontrivial recursive instance: a countdown
+  process family with a fold at every start.  It is fold-only (no
+  generalisation) and not yet connected to the step-indexed object relation or
+  fiberwise transport.
 - There is no object-language relation over the **core** `Tm` and no fiberwise
   transport theorem.
 - There is a semantic `PiCert` over arbitrary index types, families, and

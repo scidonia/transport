@@ -158,4 +158,62 @@ example : ∀ n, FiberBisim trivialFiber trivialP trivialQ () () n () () :=
   FiberPiCert.sound trivialFiber (fun _ _ => True) trivialP trivialQ trivialMeasure
     (fun _ => ()) (fun _ => ()) trivialPi () () trivial
 
+
+/-- A countdown process: steps `n+1` to `n`, halts and observes at zero. -/
+abbrev countdown : Process Unit where
+  Config := Nat
+  step := fun n => if n = 0 then none else some (n - 1)
+  obs := fun n => if n = 0 then some () else none
+
+theorem bisimCountdown (m n : Nat) :
+    BisimRel (fun _ _ => True) countdown countdown m n n := by
+  induction m generalizing n with
+  | zero => trivial
+  | succ m ih =>
+      cases n with
+      | zero => simp [BisimRel]
+      | succ n =>
+          simp [BisimRel]
+          exact ih n
+
+/-- The countdown fiber, indexed by the starting number. -/
+abbrev countdownFiber : FiberRel where
+  Index := Nat
+  Source := fun _ => Unit
+  Residual := fun _ => Unit
+  rel := fun _ _ _ _ => True
+
+abbrev countdownP (i : countdownFiber.Index) : Process (countdownFiber.Source i) := countdown
+abbrev countdownQ (i : countdownFiber.Index) : Process (countdownFiber.Residual i) := countdown
+abbrev countdownMeasure (i : countdownFiber.Index) : (countdownQ i).Config → Nat := fun n => n
+
+/-- A fold derivation at every countdown start. -/
+def countdownDeriv :
+    (n : Nat) → FiberDerivation countdownFiber countdownP countdownQ countdownMeasure n n n n
+  | 0 => by
+      exact DerivationRel.halt (0 : countdownP 0 |>.Config) (0 : countdownQ 0 |>.Config)
+        (by simp) (by simp)
+        (by simpa [countdownFiber, countdownP, countdownQ, countdown] using bisimCountdown 1 0)
+  | n + 1 => by
+      exact DerivationRel.fold (p := n + 1) (q := n + 1)
+        (cert :=
+          { p' := n
+            q' := n
+            step_p := by simp
+            step_q := by simp
+            bisim := by
+              intro m
+              simpa [countdownFiber, countdownP, countdownQ] using bisimCountdown m (n + 1)
+            guarded := by simp [countdownMeasure] })
+        (rest := countdownDeriv n)
+
+/-- The countdown fibered Pi certificate: a dependent family of fold
+derivations over equality of starting indices. -/
+def countdownPi :
+    FiberPiCert countdownFiber (fun i i' => i = i')
+      countdownP countdownQ countdownMeasure (fun n => n) (fun n => n) := by
+  intro n n' h
+  subst h
+  exact countdownDeriv n
+
 end Transport.FiberAction
