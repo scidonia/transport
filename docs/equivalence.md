@@ -154,6 +154,14 @@ programme should not assume one until it is proved.
 
 ### What the literature actually covers
 
+- Jia, Zhao, Sjöberg, and Weirich, *Dependent Types and Program Equivalence*
+  (POPL 2010), define a dependently typed language parameterized by an abstract
+  term equivalence `isEq`, and instantiate it with a call-by-value contextual
+  equivalence `isEqCA` with equivalence assumptions.  This is a genuine
+  **contextual equivalence in a dependently typed language**.  Two cautions:
+  `isEq` is a relation on **raw terms**, not a typed heterogeneous relation,
+  and the paper proves type safety from `isEq` properties, not a Howe theorem.
+  It is still the closest precedent for the object-level CIU question.
 - Marabelli and Momigliano, *Formalizing Program Equivalences in Dependent Type
   Theory*, formalize **PCFL** — a simply typed lambda calculus with recursion and
   lazy lists — in Coq.  Coq is the dependently typed **meta-language**; the
@@ -162,9 +170,17 @@ programme should not assume one until it is proved.
 - Thibodeau, Momigliano, and Pientka, *A Case-Study in Programming Coinductive
   Proofs: Howe's Method*, mechanize Howe for **PCFL** in Beluga.  The dependent
   types of LF/Beluga are again the meta-language, not the object theory.
+- Biernacki and Polesiuk, *Logical Relations for Coherence of Effect Subtyping*
+  (TLCA 2015), use **heterogeneous typed logical relations** (step-indexed and
+  biorthogonal) between different source and target terms/types.  This is direct
+  evidence that heterogeneous typed relations are established; it is not MLTT
+  and it is not a Howe closure.
 - Hur, Dreyer, Neis, and Vafeiadis, *The Marriage of Bisimulations and Kripke
   Logical Relations*, combine process bisimulation with Kripke logical relations
   for ML-like imperative languages.  It is not an MLTT result.
+- Hirschowitz and Lafont, *A categorical framework for congruence of applicative
+  bisimilarity in higher-order languages*, gives a general categorical account
+  of Howe-style congruence; it is not a specific MLTT theorem.
 - Atkey, Ghani, and Johann, *A Relationally Parametric Model of Dependent Type
   Theory*, build a reflexive-graph/CwF model of predicative and impredicative
   MLTT with `Pi`, `Nat`, and a universe.  It is the closest dependent analogue
@@ -297,6 +313,14 @@ that the object-level MLTT equivalence already exists.
 - V. Koutavas, P. B. Levy, and E. Sumii. *Limitations of Applicative
   Bisimulation* (preliminary report).  Dagstuhl Seminar Proceedings, 2010.
   <https://drops.dagstuhl.de/storage/16dagstuhl-seminar-proceedings/dsp-vol10351/DagSemProc.10351.4/DagSemProc.10351.4.pdf>
+- L. Jia, J. Zhao, V. Sjöberg, and S. Weirich. *Dependent Types and Program
+  Equivalence*.  POPL 2010.
+  <https://www.andrew.cmu.edu/user//liminjia/research/papers/popl10-lambda-eek.pdf>
+- D. Biernacki and P. Polesiuk. *Logical Relations for Coherence of Effect
+  Subtyping* (TLCA 2015).  <https://drops.dagstuhl.de/storage/00lipics/lipics-vol038-tlca2015/LIPIcs.TLCA.2015.107/LIPIcs.TLCA.2015.107.pdf>
+- T. Hirschowitz and A. Lafont. *A categorical framework for congruence of
+  applicative bisimilarity in higher-order languages*.  LMCS 18(3), 2022.
+  <https://arxiv.org/pdf/2103.16833>
 - D. J. Howe. *Proving Congruence of Bisimulation in Functional Programming
   Languages*.  Information and Computation 124(2), 1996.
 - A. M. Pitts. *Howe's Method for Higher-Order Languages*.  In *Advanced Topics
