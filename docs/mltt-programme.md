@@ -94,11 +94,29 @@ for arbitrary terms, and only the `Eq`-specific weakening proof exists.  The
 context-morphism extension needed by substitution is a consequence of that
 general weakening.  The corrected order is
 
-1. general weakening for the full core;
-2. `CtxMap` extension under a binder;
-3. `HasTypeWF` substitution;
-4. `roll`/`case` with signature and motive scope;
-5. `TransportData.Subst` and `Congruence` instances.
+1. unify the `roll` result-index convention;
+2. general weakening for the full core;
+3. `CtxMap` extension under a binder;
+4. `HasTypeWF` substitution;
+5. `roll`/`case` with signature and motive scope;
+6. `TransportData.Subst` and `Congruence` instances.
+
+The first step is a design correction, not a lemma.  `Core.HasType.roll` computes
+the result family with
+
+```text
+args.take sig.params.length
+++ ctor.indices.map (substParams (args.take sig.params.length))
+```
+
+so constructor result indices are substituted by **parameters only**.  But
+`WellFormedSigFull` scopes constructor result indices by the **full argument
+list**, and `HasTypeDep.rollDep` substitutes them with `substMany args`.  A
+general `roll` weakening/substitution theorem cannot be stated consistently
+until these two conventions agree.
+
+The new relation `HasTypeDep` is the likely target; the old `HasType.roll` proof
+and the Eq-specific weakening must then be revalidated against it.
 
 
 The order matters because each layer consumes the previous one.
