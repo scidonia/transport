@@ -13,7 +13,8 @@ paper plan, which relates the syntactic transport theorem to the homotopy
 interpretation, is [docs/paper.md](docs/paper.md).  The Lean development is
 summarised in [docs/formalization.md](docs/formalization.md).  The
 metatheory needed for a full dependent supercompiler is staged in
-[docs/dependent-basis.md](docs/dependent-basis.md).
+[docs/dependent-basis.md](docs/dependent-basis.md).  The full
+characterisation programme is [docs/mltt-programme.md](docs/mltt-programme.md).
 
 ## Build
 
