@@ -326,3 +326,231 @@ that the object-level MLTT equivalence already exists.
 - A. M. Pitts. *Howe's Method for Higher-Order Languages*.  In *Advanced Topics
   in Bisimulation and Coinduction*, Cambridge University Press, 2011.
 Only then can the supercompiler's bisimulation be connected to it.
+
+## 11. Untyped observations and the typed lift
+
+The tempting route is:
+
+```text
+erase both programs
+prove untyped observational equivalence
+somehow lift to typed equivalence
+```
+
+That works only in one direction.
+
+### 11.1 Erasure is sound, not complete
+
+Let `erase` map typed terms to an untyped calculus, and assume:
+
+- typed contexts erase to untyped contexts;
+- typed observations are the corresponding untyped observations on erased
+  terms (termination, normal form, constructor, etc.).
+
+Then, for `t, u : A`:
+
+```text
+erase(t) ≡u erase(u)  =>  t ≡ctx u : A
+```
+
+because every typed context is an untyped context after erasure, and untyped
+equivalence quantifies over **more** contexts.
+
+The converse fails.  Typed contexts are fewer, and type abstraction/parametricity
+can identify typed programs that an untyped context distinguishes.  Erasure is a
+**sound approximation**, not a characterisation of typed equivalence.
+
+### 11.2 Erasure loses the type relation
+
+For `t : A`, `u : A'` with `R : A ~ A'`, erasure forgets `R` entirely.  Untyped
+equivalence may say that the erased programs behave the same, but it does not
+establish the type-indexed relation `t ≈_R u`.  In particular, for a function
+type it does not establish that related arguments map to related results; that
+is a type-directed property.
+
+So the untyped relation is not the general typed relation.  It can prove
+soundness at a common erased type; it cannot define the heterogeneous typed
+relation.
+
+### 11.3 The typed bridge: a cross-language logical relation
+
+The clean architecture is a **typed logical relation between source and residual
+programs**, indexed by a type relation:
+
+```text
+LR_{Γ~Γ', A~A'}(t, u)
+```
+
+with:
+
+- clauses for `Pi`, `Sigma`, identity, inductive families, and universes;
+- stability under weakening/substitution and conversion;
+- a fundamental theorem for the source and residual typing judgments;
+- adequacy: `LR` implies typed contextual equivalence (heterogeneous, or
+  same-type after transport).
+
+The supercompiler proof then has two layers:
+
+1. **Process layer.**  Erase the operational semantics and prove a
+   **process bisimulation** between source and residual configurations.  This is
+   where an untyped Howe/CIU argument can be used.
+2. **Type layer.**  Prove that the process relation is contained in the typed
+   logical relation:
+
+   ```text
+   process bisimulation  =>  LR_{A~A'}(t, sc(t))
+   ```
+
+   and then use adequacy to obtain typed contextual equivalence.
+
+The untyped observation is the **operational model** of the process layer.  The
+typed logical relation is the **specification** of the object layer.  The
+implication from process bisimulation to `LR` is the typed lift; it is proved by
+induction on the type relation and the process graph, not by erasure alone.
+
+### 11.4 Where Howe fits
+
+- At the **untyped/process** level, Howe's method proves the process
+  bisimulation is a congruence.
+- At the **typed** level, the fundamental theorem of the logical relation is the
+  typed congruence theorem.  It is the analogue of Howe's result, but it is
+  type-directed and conversion-aware.
+- A **heterogeneous typed Howe closure** would be an alternative route to typed
+  congruence; it is not required if the logical-relation route is used, and it is
+  still a research target for MLTT with conversion/eliminators.
+
+### 11.5 The proof obligation
+
+For `t : A`, `sc(t) : A'`, `e : A' ≃ A`:
+
+```text
+erase(t) ≈process erase(sc(t))
+  => LR_{A' ~ A}(sc(t), t)
+  => sc(t) ≈ctx_e t : A' ~ A
+  => transport e (sc(t)) ≡ctx t : A
+```
+
+The first arrow is the process bisimulation; the second is the typed lift
+(process relation into the logical relation); the third is adequacy; the fourth
+is the same-type specialization.
+
+The untyped calculus gives the **observational elements** and the process
+bisimulation.  It does not replace the typed logical relation; it feeds it.
+
+## 12. Pullbacks, lifts, and the typed transformation
+
+The typed transformation is primary:
+
+```text
+sc_T : (t : A) -> { A' : Type } × (e : A' ≃ A) × Term A'
+```
+
+The untyped transformation is its erasure:
+
+```text
+erase(sc_T(t)) = sc_U(erase(t))
+```
+
+This is a commuting square, not a definition of `sc_T` by pullback:
+
+```text
+Typed --sc_T--> Typed
+  | erase          | erase
+  v                v
+Untyped --sc_U--> Untyped
+```
+
+### 12.1 The erasure pullback is a relation
+
+Pulling back the graph of `sc_U` along `erase × erase` gives a relation on
+typed terms:
+
+```text
+R_erase(t,u)  iff  erase(u) = sc_U(erase(t))
+```
+
+This is a **relation**, not a function:
+
+- `sc_U(erase(t))` may have several typed liftings, at different types;
+- it may have none, unless a typing/lifting theorem is proved;
+- the untyped term does not record which typing derivation or which index was
+  used.
+
+So the pullback is a **sound candidate relation**, and the graph of the typed
+transformation is a **subrelation** of it. It does not induce `sc_T` by itself.
+The type-directed algorithm chooses a section; the choice is the typed
+transformation.
+
+### 12.2 The typed lift is a section
+
+Think of `erase` as a display/fibration from typed terms to untyped terms. A
+typed transformation `sc_T` is a **lift** of `sc_U`:
+
+- its graph is a subobject of the pullback relation;
+- for each typed input it selects a typed output and a type equivalence;
+- the square commutes by construction.
+
+The pullback gives the **space of possible lifts**; the section gives the
+**function**. The existence of the section is the type-preservation theorem,
+not a categorical formality.
+
+### 12.3 Where the typed logical relation enters
+
+The correctness of the section is not the pullback; it is the heterogeneous
+logical relation:
+
+```text
+LR_{A' ~ A}(sc_T(t), t)
+```
+
+The proof route is:
+
+1. the typed transformation is defined on typed derivations / the typed
+   process graph;
+2. its erasure is the untyped transformation, and the square commutes;
+3. the untyped process bisimulation relates the erased configurations;
+4. the typed logical relation lifts that process relation to the typed level;
+5. adequacy gives typed contextual equivalence;
+6. transport gives the same-type source theorem.
+
+The pullback is step 2's relation; the logical relation is step 4; they are not
+the same object.
+
+### 12.4 Type equivalence is a pullback; the term relation is not just that
+
+For a type equivalence `e : A ≃ A'`, the graph relation
+
+```text
+R_e(a,a')  iff  e(a) = a'
+```
+
+is the pullback of the identity relation along `e` at the type level. The term
+relation at `e` is the corresponding graph/transport relation, but the logical
+relation adds the clauses for `Pi`, `Sigma`, identity, and inductive families.
+For a general type relation `R : A ~ A'`, the term relation is a subfibration
+over `R`, not a single pullback.
+
+### 12.5 Bisimulation and Howe are not pullbacks
+
+- A **bisimulation** is a coalgebraic relation: a relation on configurations
+  closed under transitions, with the greatest bisimulation as a coinductive
+  fixed point. It is not, in general, a pullback.
+- **Howe's closure** is a congruence closure / least compatible relation
+  containing a bisimulation; it is a free-algebra construction, not a pullback.
+- The typed logical relation is the typed analogue of the congruence theorem.
+  A heterogeneous typed Howe closure would be an alternative, not a pullback.
+
+### 12.6 Consequence for the programme
+
+The supercompiler is **type-directed**:
+
+- driving uses the type/index structure;
+- the residual type `A'` and equivalence `e` are produced with the residual
+  term;
+- the untyped process graph is the erasure of the typed process graph;
+- the untyped bisimulation is the operational proof of the erased graph;
+- the typed logical relation is the object-level correctness proof.
+
+The untyped pullback is a useful **soundness/approximation** layer. It does not
+replace the typed transformation, the typed lifting theorem, or the typed
+logical relation.
