@@ -85,11 +85,14 @@ This is the simplest genuinely dependent Pi certificate.
 - `Transport/ActionRel.lean` uses a **fixed** result relation
   `rel : S -> R -> Prop`; it cannot encode a Pi certificate, whose relation is
   a family over the argument relation.
-- There is no object-language `TyRel`/`LR` over dependent types and no fiberwise
+- There is no object-language relation over the **core** `Tm` and no fiberwise
   transport theorem.
 - There is a semantic `PiCert` over arbitrary index types, families, and
   fiberwise relations, with a polymorphic identity certificate `polyIdPiCert`
   in `Transport/DependentPi.lean`.
+- There is a separate object syntax with a step-indexed `LR` in
+  `Transport/DependentSyntax.lean`; `polyIdTyRel` and `polyIdTmRel` certify
+  polymorphic identity at every step.
 The first object-language attempt exposed two structural obstacles.
 
 1. The core `Tm` is a **nested inductive**: `ind`, `roll`, and `case` carry
@@ -100,9 +103,12 @@ The first object-language attempt exposed two structural obstacles.
    returns the relation at the codomain.  Lean rejects that inductive.
 
 The object relation therefore needs either a separate dependent syntax or a
-contextual definition, not an inductive over the core `Tm`.  The closedness
-layer is kept as preparation; the semantic Pi certificate remains the checked
-dependent certificate.
+contextual definition, not an inductive over the core `Tm`.  The separate syntax
+now uses **step-indexing**: the Pi clause is a recursive call at the previous
+step, so the relation is a `def`, not an inductive.  This is the standard
+step-indexed logical-relation trick; other routes are a greatest fixed point /
+coinductive relation, an impredicative/Church encoding, or fuel on evaluation.
+The semantic Pi certificate remains the checked dependent certificate.
 
 ## What is needed
 
