@@ -19,8 +19,10 @@ None of these is contextual equivalence of source and residual programs.
 | notion | level | role |
 | --- | --- | --- |
 | definitional equality `t ≡β u` | object syntax | internal conversion; typing up to it |
-| contextual equivalence `t ≡ctx u : A` | observation | external program equality |
-| logical equivalence `LR_Γ,A(t,u)` | semantics | proof tool for contextual equivalence |
+| contextual equivalence `t ≡ctx u : A` | observation | external program equality, same type |
+| heterogeneous contextual equivalence `t ≈_{A,A'} u` | observation | external equality at related types |
+| logical equivalence `LR_{A,A'}(t,u)` | semantics | heterogeneous proof tool |
+| type relation `A ~ A'` / `e : A ≃ A'` | semantics/HoTT | relates types, not terms |
 | type equivalence `A ≃ B` / path | HoTT | transport of types, not of programs |
 
 The supercompiler needs the first two and a bridge between them.  The fourth is
@@ -58,8 +60,48 @@ For open terms, close under substitutions.  For dependent types, the context
 must be typed and the relation type-directed: `C[-]` is a typing context with a
 hole at type `A`.
 
-This is the **observational** or **CIU** (closed-instance-of-use) equivalence.
-It is the natural external equality for MLTT.
+This is the **observational** or **CIU** (closed-instance-of-use) equivalence
+at a single type.  It is the natural external equality when both programs have
+the same type.
+
+### Heterogeneous CIU
+
+The supercompiler does not preserve the type syntactically:
+
+```text
+t : A
+sc(t) : A'
+```
+
+so `t ≡ctx sc(t) : A` is not even well-typed.  The general relation is indexed
+by a **type relation** `R : A ~ A'`:
+
+```text
+t ≈ctx_R u
+```
+
+with `t : A`, `u : A'`.  It is defined by closing under **related contexts**:
+a context `C[-]` with a hole at `A` and a context `C'[-]` with a hole at `A'`,
+where the two contexts are related by a context relation (for dependent types,
+a substitution relation / context morphism).  Observation is then related at
+the result type.
+
+The same-type CIU is the special case `A = A'` and `R` the equality relation.
+The transport form is the same-type special case after moving the residual term:
+
+```text
+transport e (sc(t)) ≡ctx t : A
+```
+
+where `e : A ≃ A'`.  This is the form the supercompiler correctness theorem
+should state if it privileges the source type.
+
+The heterogeneous form is the semantic primitive; the transported same-type
+form is its specialization.  Neither replaces the other:
+
+- the heterogeneous relation explains why a residual term at a different type
+  may be equivalent to the source;
+- the transported relation is the closed theorem at the source type.
 
 ## 4. Logical equivalence
 
@@ -67,8 +109,11 @@ The standard proof tool is a **Kripke logical relation** indexed by contexts
 and types:
 
 ```text
-LR_Γ,A(t,u)
+LR_{Γ~Γ', A~A'}(t,u)
 ```
+
+indexed by a context relation and a type relation.  The same-type relation is
+the special case of the identity/equality relation on a context and type.
 
 with:
 
@@ -102,8 +147,9 @@ For MLTT the situation is not an off-the-shelf Howe theorem:
 - the standard tool is a Kripke/step-indexed logical relation, not untyped
   applicative bisimulation.
 
-A **typed applicative bisimulation** with a **type-directed Howe closure** is a
-reasonable research target.  It is not a standard result for full MLTT, and the
+A **typed, heterogeneous applicative bisimulation** with a **type-directed Howe
+closure** is a reasonable research target.  It must relate types and contexts,
+not just terms of one type.  It is not a standard result for full MLTT, and the
 programme should not assume one until it is proved.
 
 ### What the literature actually covers
@@ -172,6 +218,12 @@ correctness is separate:
 transport e (sc(t)) ≡ctx t : A
 ```
 
+or, heterogeneously,
+
+```text
+sc(t) ≈ctx_e t : A' ~ A
+```
+
 or a path in the identity type when the type theory has one.  Univalence
 identifies equivalent types, but it does not identify arbitrary source and
 residual terms; the transport and the contextual/logical relation are both
@@ -187,11 +239,23 @@ correctness :
     transport e (sc(t).2) ≡ctx t : A
 ```
 
+The heterogeneous form is:
+
+```text
+sc(t).2 ≈ctx_e t : A' ~ A
+```
+
+Both use the same logical relation; the transport form is the specialization at
+the source type.
+
 with the proof route:
 
-1. a process bisimulation between source and residual configurations;
-2. a Kripke logical relation at the source type;
-3. adequacy: logical equivalence implies contextual equivalence;
+1. a heterogeneous process bisimulation between source and residual
+   configurations at related types;
+2. a heterogeneous Kripke logical relation at the source/residual type
+   relation;
+3. adequacy: logical equivalence implies heterogeneous contextual equivalence;
+   same-type contextual equivalence after transport;
 4. a type-directed congruence/CIU step; Howe only when the object fragment is
    an applicative lambda calculus;
 5. transport coherence at the type level.
