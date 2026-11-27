@@ -230,12 +230,12 @@ proof-carrying actions:
 
 - `halt` / residualise;
 - `cert`, a leaf carrying a step-indexed bisimulation;
-- `generalise`, carrying a `GenCert`;
+- `generalise`, carrying a `GenCert` and a continuation;
 - `fold`, carrying a `ResidualFoldCert` and a continuation.
 
 `reverseDerivation` (fold on each cons, residualise on nil) and
-`reverseGeneralised` (one generalisation action) are two terms in this action
-calculus.  There is no required deterministic supercompiler loop; an algorithm
+`reverseGeneralised` (accumulator generalisation composed with that derivation)
+are two terms in this action calculus.  There is no required deterministic supercompiler loop; an algorithm
 or an oracle may choose an action tree, and `RDerivation.sound` checks the
 carried certificates.
 

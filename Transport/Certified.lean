@@ -214,7 +214,8 @@ inductive RDerivation {α : Type u} : SourceConfig α → ResidualConfig α → 
       RDerivation s r
   | cert (s : SourceConfig α) (r : ResidualConfig α)
       (h : ∀ n, SBisim n s r) : RDerivation s r
-  | generalise (s : SourceConfig α) (g : GenCert s) :
+  | generalise (s : SourceConfig α) (g : GenCert s)
+      (rest : RDerivation s (g.schema s.a)) :
       RDerivation s (g.schema s.a)
   | fold (s : SourceConfig α) (r : ResidualConfig α)
       (cert : ResidualFoldCert s r)
@@ -240,7 +241,7 @@ theorem sound {α : Type u} {s : SourceConfig α} {r : ResidualConfig α}
           rcases ha with rfl
           simp [SBisim, sstep, rstep, sObs, rObs]
   | cert s r h => exact h
-  | generalise s g =>
+  | generalise s g rest ih =>
       intro n
       exact g.sound s.a n
   | fold s r cert rest ih =>
@@ -251,12 +252,7 @@ end RDerivation
 /-- A generalisation action: the certificate is the GenCert at its instance. -/
 def generaliseDerivation {α : Type u} (s : SourceConfig α) (g : GenCert s) :
     RDerivation s (g.schema s.a) :=
-  .generalise s g
-
-/-- A one-action transform using the algorithmic accumulator generalisation. -/
-def reverseGeneralised {α : Type u} (s : SourceConfig α) :
-    RDerivation s ⟨.rev, s.xs, s.a⟩ :=
-  generaliseDerivation s (algorithmicGen s)
+  .generalise s g (.cert s (g.schema s.a) (fun n => g.sound s.a n))
 
 /-- The reverse supercompiler: fold on each cons, residualise on nil. -/
 def reverseDerivation {α : Type u} : (xs : List α) → (a : List α) →
@@ -271,6 +267,12 @@ def reverseDerivation {α : Type u} : (xs : List α) → (a : List α) →
 theorem reverseDerivation_sound {α : Type u} (xs a : List α) :
     ∀ n, SBisim n ⟨xs, a⟩ ⟨.rev, xs, a⟩ :=
   RDerivation.sound (reverseDerivation xs a)
+
+/-- A composed transform: accumulator generalisation followed by the reverse
+fold/residualise derivation. -/
+def reverseGeneralised {α : Type u} (s : SourceConfig α) :
+    RDerivation s ⟨.rev, s.xs, s.a⟩ :=
+  .generalise s (algorithmicGen s) (reverseDerivation s.xs s.a)
 
 
 /-! ## Stage 4, base case: a heterogeneous logical relation for lists -/
