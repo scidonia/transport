@@ -133,7 +133,8 @@ The programme needs:
 The current first-order reverse certificate/derivation is the validation
 case; the dependent instance is open.  The equivalence layer — definitional,
 contextual, logical, bisimulation/Howe, and HoTT type equivalence — is fixed in
-[docs/equivalence.md](equivalence.md).
+[docs/equivalence.md](equivalence.md).  The full supercompiler-correctness
+obligations (T1--T10) and their current status are in §13 of that note.
 
 ## 7. Milestones
 
@@ -145,7 +146,7 @@ contextual, logical, bisimulation/Howe, and HoTT type equivalence — is fixed i
 | M4 | general weakening/substitution; telescope contexts |
 | M5 | progress, SN, confluence, canonicity, decidability for the fragment |
 | M6 | CwF/term model/initiality; HoTT interpretation |
-| M7 | dependent supercompiler and transport theorem |
+| M7 | dependent supercompiler and transport theorem; the T1--T10 correctness obligations in `docs/equivalence.md` §13 |
 | M8 | paper: transport, supercompilation, and the HoTT reading |
 
 The current commits are the start of M1: the uniform signatures and their
