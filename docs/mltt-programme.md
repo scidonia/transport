@@ -115,8 +115,18 @@ list**, and `HasTypeDep.rollDep` substitutes them with `substMany args`.  A
 general `roll` weakening/substitution theorem cannot be stated consistently
 until these two conventions agree.
 
-The new relation `HasTypeDep` is the likely target; the old `HasType.roll` proof
-and the Eq-specific weakening must then be revalidated against it.
+Decision from the roll-convention analysis: keep `Core.HasType.roll` unchanged.
+The old parameter-only convention preserves the `Eq`/`J` proofs and the
+Eq-specific weakening.  The next theorem is the general old-judgment renaming
+
+```text
+WellFormedEnv env -> Wk ρ Γ Δ -> HasType env Γ t A ->
+HasType env Δ (rename ρ t) (rename ρ A)
+```
+
+and `HasTypeDep.ofHasType` consumes it.  The full-argument `HasTypeDep.rollDep`
+remains the target for the dependent core; migrating `Eq_sig` to `EqDep_sig`
+is deferred, not done silently.
 
 The first general step is in place: `WellScoped.mono`, `sigTyListFull`,
 `rollIndexArgsFull`, and their rename lemmas under `WellFormedSigFull`
