@@ -9,6 +9,7 @@ repository formalises is what it means for that residual program to have the
 source type, and what has to be proved for the replacement to be sound.
 
 The general theorem is [docs/general-transport.md](docs/general-transport.md).
+The roll-convention decision is [docs/roll-convention.md](docs/roll-convention.md).
 The problem statement is [docs/transport-mltt.md](docs/transport-mltt.md).  The
 paper plan, which relates the syntactic transport theorem to the homotopy
 interpretation, is [docs/paper.md](docs/paper.md).  The Lean development is
