@@ -73,6 +73,8 @@ nix develop .#cubical -c bash -c 'cd cubical && agda --cubical --guardedness Uni
 | full-argument signature indices and renaming | `sigTyListFull`, `rollIndexArgsFull`, `sigTyListFull_rename`, `rollIndexArgsFull_rename` |
 | full-argument signature substitution | `sigTyListFull_subst`, `rollIndexArgsFull_subst` |
 | context insertion and case-motive placement | `Ctx.insertAt`, `ctxExtendMany_insert`, `caseMotiveCtx_insert` |
+| case-motive context weakening | `caseMotiveCtx_wk_insert` |
+| general old-judgment renaming | `hasType_rename_general`, `EnvIndexArity` |
 | typed context morphism | `Transport.Mltt.Scoped.CtxMap`, `CtxMap.id` |
 | well-formed typing invariant | `Transport.Mltt.HasTypeWF`, `WellFormedEnvFull`, `WellScopedCtx` |
 | `Eq` signature invariant and scoped substitution commutation | `Transport.Mltt.Scoped.eq_sig_wellFormed`, `substMany_rename_of_wellScoped` |

@@ -117,7 +117,10 @@ until these two conventions agree.
 
 Decision from the roll-convention analysis: keep `Core.HasType.roll` unchanged.
 The old parameter-only convention preserves the `Eq`/`J` proofs and the
-Eq-specific weakening.  The next theorem is the general old-judgment renaming
+Eq-specific weakening.  The general old-judgment renaming is now proved in
+`Transport/Mltt/HasTypeRenameGeneral.lean`; it needs the missing signature
+clause `EnvIndexArity` (constructor result-index count equals the family index
+count), with `EnvIndexArity [Eq_sig]` proved.  The statement is
 
 ```text
 WellFormedEnv env -> Wk ρ Γ Δ -> HasType env Γ t A ->
@@ -170,9 +173,11 @@ but the context operations and lookup/weakening lemmas need an insertion at
 
 This is the context-operation gap.  `Transport/Mltt/ContextInsert.lean` now
 supplies `Ctx.insertAt` and proves the lookup, `ctxExtendMany`, and
-`caseMotiveCtx` insertion lemmas.  The case-motive context can be placed
-structurally; the remaining work is to use it in the weakening proof, which
-still needs the base `HasType` convention settled.
+`caseMotiveCtx` insertion lemmas.  `Transport/Mltt/CaseMotiveCtxWk.lean`
+proves the corrected case-motive weakening statement `caseMotiveCtx_wk_insert`
+with parameters shifted by `Tm.shift 1 0`; the literal
+`params.map (Tm.rename ρ)` statement is false because parameters point into
+`Γ`, not into the motive prefix.
 
 
 The order matters because each layer consumes the previous one.
